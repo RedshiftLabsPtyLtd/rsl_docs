@@ -1,4 +1,4 @@
-# RSL Web documentation
+# RSL Web Documentation
 
 This repo holds generated documentation for the RedShiftLabs products.
 
