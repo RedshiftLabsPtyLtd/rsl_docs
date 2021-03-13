@@ -1,0 +1,1778 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Binary packet structure &mdash; redshiftlabs_serial  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Register Overview" href="register_map_current.html" />
+    <link rel="prev" title="Redshift Labs serial documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> redshiftlabs_serial
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Binary packet structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-operations">Read Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-operations">Write Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-operations">Command Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#broadcasted-packets">Broadcasted packets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#all-raw-packet"><cite>ALL_RAW_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-gyro-packet"><cite>RAW_GYRO_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-accel-packet"><cite>RAW_ACCEL_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-mag-packet"><cite>RAW_MAG_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-temperature-packet"><cite>RAW_TEMPERATURE_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#all-proc-packet"><cite>ALL_PROC_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#proc-gyro-packet"><cite>PROC_GYRO_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#proc-accel-packet"><cite>PROC_ACCEL_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#proc-mag-packet"><cite>PROC_MAG_PACKET</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#euler-phi-theta"><cite>EULER_PHI_THETA</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#health"><cite>HEALTH</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quaternion"><cite>QUATERNION</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_current.html">Register Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidden_registers.html">Hidden registers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binary_packet_v2.html">Binary packet structure V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_v2.html">Register map V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidden_registers_v2.html">Hidden registers V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shearwater_howto.html">Shearwater HowTo</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">redshiftlabs_serial</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Binary packet structure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="binary-packet-structure">
+<h1><a class="toc-backref" href="#table-of-contents">Binary packet structure</a><a class="headerlink" href="#binary-packet-structure" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#binary-packet-structure" id="id29">Binary packet structure</a></p>
+<ul>
+<li><p><a class="reference internal" href="#read-operations" id="id30">Read Operations</a></p></li>
+<li><p><a class="reference internal" href="#write-operations" id="id31">Write Operations</a></p></li>
+<li><p><a class="reference internal" href="#command-operations" id="id32">Command Operations</a></p></li>
+<li><p><a class="reference internal" href="#broadcasted-packets" id="id33">Broadcasted packets</a></p>
+<ul>
+<li><p><a class="reference internal" href="#all-raw-packet" id="id34"><cite>ALL_RAW_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#raw-gyro-packet" id="id35"><cite>RAW_GYRO_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#raw-accel-packet" id="id36"><cite>RAW_ACCEL_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#raw-mag-packet" id="id37"><cite>RAW_MAG_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#raw-temperature-packet" id="id38"><cite>RAW_TEMPERATURE_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#all-proc-packet" id="id39"><cite>ALL_PROC_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#proc-gyro-packet" id="id40"><cite>PROC_GYRO_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#proc-accel-packet" id="id41"><cite>PROC_ACCEL_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#proc-mag-packet" id="id42"><cite>PROC_MAG_PACKET</cite></a></p></li>
+<li><p><a class="reference internal" href="#euler-phi-theta" id="id43"><cite>EULER_PHI_THETA</cite></a></p></li>
+<li><p><a class="reference internal" href="#health" id="id44"><cite>HEALTH</cite></a></p></li>
+<li><p><a class="reference internal" href="#quaternion" id="id45"><cite>QUATERNION</cite></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Data transmitted and received by the UM7 is
+formatted into packets containing:</p>
+<p>1. The three character start sequence
+<code class="docutils literal notranslate"><span class="pre">s</span></code> <code class="docutils literal notranslate"><span class="pre">n</span></code> <code class="docutils literal notranslate"><span class="pre">p</span></code> to indicate the start
+of a new packet (i.e. start new packet);</p>
+<p>2. A <strong>packet type</strong> (<strong>PT</strong>) byte describing the
+function and length of the packet;</p>
+<p>3. An address byte indicating the
+address of the register or command;</p>
+<p>4. A sequence of data bytes,
+the length of which is specified in the <strong>PT</strong> byte;</p>
+<p>5. A two-byte checksum
+for error-detection.</p>
+<table class="docutils align-default" id="id13">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">UART serial packet structure</span><a class="headerlink" href="#id13" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 38%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+<td><p><strong>PT</strong></p></td>
+<td><p>address</p></td>
+<td><p>D<sub>0</sub> , D<sub>1</sub> , …, D<sub>N-1</sub></p></td>
+<td><p>Checksum<sub>1</sub> </p></td>
+<td><p>Checksum<sub>0</sub> </p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p>packet start</p></td>
+<td><p>type</p></td>
+<td><p>address</p></td>
+<td><p>data bytes</p></td>
+<td colspan="2"><p>Checksum</p></td>
+</tr>
+</tbody>
+</table>
+<p>All binary packets sent and received by the UM7
+must conform to the format given above.</p>
+<p>The PT byte specifies whether the packet is a read or a write operation,
+whether it is a batch operation,
+and the length of the batch operation (when applicable).
+The PT byte is also used by the UM7 to respond to commands.
+The specific meaning of each bit in the PT byte is given below.</p>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Packet Type (PT) byte</span><a class="headerlink" href="#id14" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 9%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 12%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>bit</strong>:</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>3</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>meaning</strong>:</p></td>
+<td><p>Has Data</p></td>
+<td><p>Is Batch</p></td>
+<td><p>BL3</p></td>
+<td><p>BL2</p></td>
+<td><p>BL1</p></td>
+<td><p>BL0</p></td>
+<td><p>hidden</p></td>
+<td><p>CF</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">Packet Type (PT) Bits Descriptions</span><a class="headerlink" href="#id15" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bit(s)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Has Data: If the packet contains data, this bit is set (1).
+If not, this bit is cleared (0).</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Is Batch: If the packet is a batch operation,
+this bit is set (1).
+If not, this bit is cleared (0).</p></td>
+</tr>
+<tr class="row-even"><td><p>5:2</p></td>
+<td><p>Batch Length (<strong>BL</strong>):
+Four bits specifying the length of the batch operation.
+Unused if bit 7 is cleared.
+The maximum batch length is therefore <span class="math notranslate nohighlight">\(2^4 = 16\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Hidden: If set, then the packet address specified in the
+“<strong>address</strong>” field is a “<em>hidden</em>” address.
+Hidden registers are used to store factory calibration
+and filter tuning coefficients that do not typically need
+to be viewed or modified by the user.</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>Command Failed (CF):
+Used by the autopilot to report when a command has failed.
+Must be set to zero for all packets written to the UM7.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The address byte specifies which register will be involved in the operation:</p>
+<ul class="simple">
+<li><p>During a read operation (Has Data = 0), the address specifies which register to read.</p></li>
+<li><p>During a write operation (Has Data = 1), the address specifies where to place the data contained in the data section of the packet.</p></li>
+<li><p>For a batch read/write operation, the address byte specifies the starting address of the operation.</p></li>
+</ul>
+<p>The “Data Bytes” section of the packet contains data to be written to one or more registers.
+No byte in the packet states explicitly how many bytes are in this section because
+it is possible to determine the number of data bytes that should be in the packet by evaluating
+the <strong>PT</strong> byte.</p>
+<p>If the “Has Data” bit in the <strong>PT</strong> byte is cleared (Has Data = 0),
+then there are no data bytes in the packet and the “Checksum” immediately follows the address.
+If, on the other hand, the “Has Data” bit is set (Has Data = 1) then the number
+of bytes in the data section depends on the value of
+the “Is Batch” and “Batch Length” portions of the <strong>PT</strong> byte.</p>
+<p>For a batch operation (Is Batch = 1), the length of the packet data section is equal to:</p>
+<div class="math notranslate nohighlight">
+\[4 \times (\text{Batch Length}),\]</div>
+<p>Note that the batch length refers to the number of registers in the batch,
+<strong>NOT</strong> the number of bytes. Registers are <span class="math notranslate nohighlight">\(4\)</span> bytes long.</p>
+<p>For a non-batch operation (Is Batch = 0),
+the length of the data section is equal to 4 bytes (one register).
+The data section lengths and total packet lengths for different
+<strong>PT</strong> configurations are shown below.</p>
+<table class="docutils align-default" id="id16">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text">Packet Length Summary</span><a class="headerlink" href="#id16" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 38%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Has Data</p></th>
+<th class="head"><p>Is Batch</p></th>
+<th class="head"><p>Data Section Length (bytes)</p></th>
+<th class="head"><p>Total Packet Length  (bytes)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>N/A</p></td>
+<td><p>0</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>4</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p><span class="math notranslate nohighlight">\(4 \times (\text{Batch Length})\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(7 + 4 \times (\text{Batch Length})\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that if a packet is a batch operation, the batch length must be greater than zero.</p>
+<p>The two checksum bytes consist of the unsigned
+16-bit sum of all preceding bytes in the packet, including the packet header.</p>
+<div class="section" id="read-operations">
+<h2><a class="toc-backref" href="#table-of-contents">Read Operations</a><a class="headerlink" href="#read-operations" title="Permalink to this headline">¶</a></h2>
+<p>To initiate a serial read of one or more registers aboard the sensor,
+a packet should be sent to the UM7 with the “Has Data” bit cleared.
+This tells the device that this will be a read operation
+from the address specified in the packet’s “Address” byte.
+If the “Is Batch” bit is set, then the packet will trigger
+a batch read in which the “Address” byte specifies the address of the first
+register to be read.</p>
+<p>In response to a read packet, the UM7 will send a packet in which the “Has Data” bit is set,
+and the “Is Batch” and “Batch Length” bits are equivalent
+to those of the packet that triggered the read operation.
+The register data will be contained in the “Data Bytes” section of the packet.</p>
+</div>
+<div class="section" id="write-operations">
+<h2><a class="toc-backref" href="#table-of-contents">Write Operations</a><a class="headerlink" href="#write-operations" title="Permalink to this headline">¶</a></h2>
+<p>To initiate a serial write into one or more registers aboard the sensor,
+a packet should be sent to the UM7 with the “Has Data” bit set.
+This tells the device that the incoming packet contains
+data that should be written to the register specified by the packet’s “Address” byte.
+If a batch write operation is to be performed,
+the “Is Batch” bit should be set, and the “Batch Length” bits
+should indicate the number of registers that are to be written to.</p>
+<p>In response to a write packet,
+the UM7 will update the contents of the specified register(s) with
+the contents of the data section of the packet.
+It will then transmit a <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet to indicate
+that the write operation succeeded.
+A <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet is a packet with <strong>PT</strong> = 0 (no data, no batch)
+and with an address matching the address of the register
+to which the write operation was made,
+or the start address of the write operation if this was a batch write.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet is equivalent to a packet
+that would cause the autopilot to initiate a read operation on
+the address to which data was just written.
+Since the packet is going from the sensor to the host, however,
+its meaning is different (it would not make sense for the autopilot
+to request the contents of one of its registers from an external host).</p>
+</div>
+<div class="section" id="command-operations">
+<h2><a class="toc-backref" href="#table-of-contents">Command Operations</a><a class="headerlink" href="#command-operations" title="Permalink to this headline">¶</a></h2>
+<p>There are a variety of register address that do not correspond with actual
+physical registers aboard the UM7.
+These “command” addresses are used to cause the sensor to execute specific commands
+(there are commands for executing calibration operations, resetting the onboard
+filters, etc. See the <a class="reference external" href="register_map_current.html">Register Overview</a> in this document for more details).</p>
+<p>To initiate a command, simply send a packet to the autopilot with the command’s address in
+the packet “Address” byte. The <strong>PT</strong> byte should be set to zero for a command operation.</p>
+<p>If the UM7 successfully completes the specified command,
+then a <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet is returned with the command address
+in the “Address” byte of the response packet.
+If the command fails, the device responds by sending a <code class="docutils literal notranslate"><span class="pre">COMMAND_FAILED</span></code> packet.
+The <code class="docutils literal notranslate"><span class="pre">COMMAND_FAILED</span></code> packet is equivalent to the <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet except that the
+“Command Failed” bit in the <strong>PT</strong> byte is set (<strong>CF</strong> = 1).</p>
+<p>In some cases, a command will cause specific packets to be sent other than the
+<code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet.
+A <code class="docutils literal notranslate"><span class="pre">GET_FW_VERSION</span></code> command will, for example, return a packet containing the version
+of the firmware installed on the UM7.
+In this and similar cases, the <code class="docutils literal notranslate"><span class="pre">COMMAND_COMPLETE</span></code> packet is not sent.</p>
+</div>
+<div class="section" id="broadcasted-packets">
+<h2><a class="toc-backref" href="#table-of-contents">Broadcasted packets</a><a class="headerlink" href="#broadcasted-packets" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to configure the following packets to be sent periodically from the RSL board:</p>
+<div class="section" id="all-raw-packet">
+<span id="id1"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>ALL_RAW_PACKET</cite></a><a class="headerlink" href="#all-raw-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ALL_RAW_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(11\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{ALL_RAW_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 51 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id17">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text"><strong>ALL_RAW_PACKET</strong></span><a class="headerlink" href="#id17" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_GYRO_RAW_XY_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-xy"><span class="std std-ref">DREG_GYRO_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-z"><span class="std std-ref">DREG_GYRO_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-time"><span class="std std-ref">DREG_GYRO_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-xy"><span class="std std-ref">DREG_ACCEL_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-z"><span class="std std-ref">DREG_ACCEL_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>24</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>25</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>26</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-time"><span class="std std-ref">DREG_ACCEL_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>27</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>28</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>29</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>30</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-xy"><span class="std std-ref">DREG_MAG_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>31</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>32</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>33</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>34</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-z"><span class="std std-ref">DREG_MAG_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>35</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>36</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>37</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>38</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-time"><span class="std std-ref">DREG_MAG_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>39</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>40</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>41</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>42</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-temperature"><span class="std std-ref">DREG_TEMPERATURE</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>43</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>44</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>45</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>46</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-temperature-time"><span class="std std-ref">DREG_TEMPERATURE_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>47</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>48</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>49</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>50</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>51</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="raw-gyro-packet">
+<span id="id2"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>RAW_GYRO_PACKET</cite></a><a class="headerlink" href="#raw-gyro-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RAW_GYRO_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(3\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{RAW_GYRO_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id18">
+<caption><span class="caption-number">Table 6 </span><span class="caption-text"><strong>RAW_GYRO_PACKET</strong></span><a class="headerlink" href="#id18" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_GYRO_RAW_XY_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-xy"><span class="std std-ref">DREG_GYRO_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-z"><span class="std std-ref">DREG_GYRO_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-raw-time"><span class="std std-ref">DREG_GYRO_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="raw-accel-packet">
+<span id="id3"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>RAW_ACCEL_PACKET</cite></a><a class="headerlink" href="#raw-accel-packet" title="Permalink to this headline">¶</a></h3>
+<p>The frequency of sending the <code class="docutils literal notranslate"><span class="pre">RAW_ACCEL_PACKET</span></code> broadcast messages
+is defined by the field <code class="docutils literal notranslate"><span class="pre">RAW_ACCEL_RATE</span></code> in the <a class="reference internal" href="register_map_v2.html#creg-com-rates1"><span class="std std-ref">CREG_COM_RATES1</span></a> register.</p>
+<p><strong>Note</strong>: if <code class="docutils literal notranslate"><span class="pre">ALL_RAW_RATE</span></code> field of the register <a class="reference internal" href="register_map_v2.html#creg-com-rates2"><span class="std std-ref">CREG_COM_RATES2</span></a> is not 0, then
+packet with all raw sensor data (<a class="reference internal" href="binary_packet_v2.html#all-raw-packet"><span class="std std-ref">ALL_RAW_PACKET</span></a>) will be sent instead,
+since <a class="reference internal" href="binary_packet_v2.html#all-raw-packet"><span class="std std-ref">ALL_RAW_PACKET</span></a> has higher priority.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">RAW_ACCEL_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(3\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{RAW_ACCEL_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id19">
+<caption><span class="caption-number">Table 7 </span><span class="caption-text"><strong>RAW_ACCEL_PACKET</strong></span><a class="headerlink" href="#id19" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_ACCEL_RAW_XY_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-xy"><span class="std std-ref">DREG_ACCEL_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-z"><span class="std std-ref">DREG_ACCEL_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-raw-time"><span class="std std-ref">DREG_ACCEL_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="raw-mag-packet">
+<span id="id4"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>RAW_MAG_PACKET</cite></a><a class="headerlink" href="#raw-mag-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RAW_MAG_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(3\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{RAW_MAG_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id20">
+<caption><span class="caption-number">Table 8 </span><span class="caption-text"><strong>RAW_MAG_PACKET</strong></span><a class="headerlink" href="#id20" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_MAG_RAW_XY_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_X[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-xy"><span class="std std-ref">DREG_MAG_RAW_XY</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Z[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-z"><span class="std std-ref">DREG_MAG_RAW_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-raw-time"><span class="std std-ref">DREG_MAG_RAW_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_RAW_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="raw-temperature-packet">
+<span id="id5"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>RAW_TEMPERATURE_PACKET</cite></a><a class="headerlink" href="#raw-temperature-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RAW_TEMPERATURE_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(2\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{RAW_MAG_2_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 15 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id21">
+<caption><span class="caption-number">Table 9 </span><span class="caption-text"><strong>RAW_TEMPERATURE_PACKET</strong></span><a class="headerlink" href="#id21" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_TEMPERATURE_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-temperature"><span class="std std-ref">DREG_TEMPERATURE</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-temperature-time"><span class="std std-ref">DREG_TEMPERATURE_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="all-proc-packet">
+<span id="id6"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>ALL_PROC_PACKET</cite></a><a class="headerlink" href="#all-proc-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ALL_PROC_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(12\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{ALL_PROC_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 55 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id22">
+<caption><span class="caption-number">Table 10 </span><span class="caption-text"><strong>ALL_PROC_PACKET</strong></span><a class="headerlink" href="#id22" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_GYRO_PROC_X_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-x"><span class="std std-ref">DREG_GYRO_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-y"><span class="std std-ref">DREG_GYRO_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-z"><span class="std std-ref">DREG_GYRO_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-time"><span class="std std-ref">DREG_GYRO_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-x"><span class="std std-ref">DREG_ACCEL_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>24</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>25</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>26</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-y"><span class="std std-ref">DREG_ACCEL_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>27</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>28</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>29</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>30</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-z"><span class="std std-ref">DREG_ACCEL_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>31</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>32</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>33</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>34</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-time"><span class="std std-ref">DREG_ACCEL_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>35</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>36</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>37</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>38</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-x"><span class="std std-ref">DREG_MAG_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>39</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>40</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>41</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>42</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-y"><span class="std std-ref">DREG_MAG_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>43</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>44</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>45</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>46</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-z"><span class="std std-ref">DREG_MAG_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>47</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>48</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>49</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>50</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-time"><span class="std std-ref">DREG_MAG_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>51</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>52</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>53</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>54</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>55</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="proc-gyro-packet">
+<span id="id7"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>PROC_GYRO_PACKET</cite></a><a class="headerlink" href="#proc-gyro-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">PROC_GYRO_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(4\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{PROC_GYRO_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id23">
+<caption><span class="caption-number">Table 11 </span><span class="caption-text"><strong>PROC_GYRO_PACKET</strong></span><a class="headerlink" href="#id23" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_GYRO_PROC_X_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-x"><span class="std std-ref">DREG_GYRO_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-y"><span class="std std-ref">DREG_GYRO_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-z"><span class="std std-ref">DREG_GYRO_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-gyro-proc-time"><span class="std std-ref">DREG_GYRO_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GYRO_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="proc-accel-packet">
+<span id="id8"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>PROC_ACCEL_PACKET</cite></a><a class="headerlink" href="#proc-accel-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">PROC_ACCEL_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(4\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{PROC_ACCEL_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id24">
+<caption><span class="caption-number">Table 12 </span><span class="caption-text"><strong>PROC_ACCEL_PACKET</strong></span><a class="headerlink" href="#id24" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_ACCEL_PROC_X_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-x"><span class="std std-ref">DREG_ACCEL_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-y"><span class="std std-ref">DREG_ACCEL_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-z"><span class="std std-ref">DREG_ACCEL_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-accel-proc-time"><span class="std std-ref">DREG_ACCEL_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ACCEL_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="proc-mag-packet">
+<span id="id9"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>PROC_MAG_PACKET</cite></a><a class="headerlink" href="#proc-mag-packet" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">PROC_MAG_PACKET</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(4\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{PROC_MAG_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id25">
+<caption><span class="caption-number">Table 13 </span><span class="caption-text"><strong>PROC_MAG_PACKET</strong></span><a class="headerlink" href="#id25" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_MAG_PROC_X_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-x"><span class="std std-ref">DREG_MAG_PROC_X</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_X[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-y"><span class="std std-ref">DREG_MAG_PROC_Y</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Y[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-z"><span class="std std-ref">DREG_MAG_PROC_Z</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_Z[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_current.html#dreg-mag-proc-time"><span class="std std-ref">DREG_MAG_PROC_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MAG_PROC_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="euler-phi-theta">
+<span id="id10"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>EULER_PHI_THETA</cite></a><a class="headerlink" href="#euler-phi-theta" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">EULER_PHI_THETA</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(5\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{EULER_PHI_THETA}_{\text{length}} = 4 \times \text{Data Length} + 7 = 27 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id26">
+<caption><span class="caption-number">Table 14 </span><span class="caption-text"><strong>EULER_PHI_THETA</strong></span><a class="headerlink" href="#id26" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_EULER_PHI_THETA_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PHI[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-euler-phi-theta"><span class="std std-ref">DREG_EULER_PHI_THETA</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PHI[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THETA[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THETA[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PSI[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-euler-psi"><span class="std std-ref">DREG_EULER_PSI</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PSI[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PHI_DOT[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-euler-phi-theta-dot"><span class="std std-ref">DREG_EULER_PHI_THETA_DOT</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PHI_DOT[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THETA_DOT[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">THETA_DOT[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PSI_DOT[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-euler-psi-dot"><span class="std std-ref">DREG_EULER_PSI_DOT</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PSI_DOT[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>20</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>21</strong></p></td>
+<td><p>Reserved</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>22</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EULER_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-euler-time"><span class="std std-ref">DREG_EULER_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>23</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EULER_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>24</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EULER_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>25</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">EULER_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>26</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>27</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="health">
+<span id="id11"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>HEALTH</cite></a><a class="headerlink" href="#health" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">HEALTH</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(1\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{HEALTH}_{\text{length}} = 4 \times \text{Data Length} + 7 = 11 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id27">
+<caption><span class="caption-number">Table 15 </span><span class="caption-text"><strong>HEALTH</strong></span><a class="headerlink" href="#id27" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_HEALTH_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEALTH[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-health"><span class="std std-ref">DREG_HEALTH</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEALTH[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEALTH[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HEALTH[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="quaternion">
+<span id="id12"></span><h3><a class="toc-backref" href="#table-of-contents"><cite>QUATERNION</cite></a><a class="headerlink" href="#quaternion" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">QUATERNION</span></code> has the structure defined in the table below.
+The <strong>Data Length</strong> of the packet is <span class="math notranslate nohighlight">\(3\)</span>, hence the packet total length:</p>
+<div class="math notranslate nohighlight">
+\[\text{QUATERNION}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}\]</div>
+<table class="docutils align-default" id="id28">
+<caption><span class="caption-number">Table 16 </span><span class="caption-text"><strong>QUATERNION</strong></span><a class="headerlink" href="#id28" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 36%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Byte</p></th>
+<th class="head"><p>Content</p></th>
+<th class="head"><p>Register Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>1</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">s</span></code></p></td>
+<td rowspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p><strong>2</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>3</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>4</strong></p></td>
+<td><p>Packet type</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>5</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DREG_QUAT_AB_ADDR</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>6</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_A[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-quat-ab"><span class="std std-ref">DREG_QUAT_AB</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>7</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_A[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>8</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_B[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>9</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_B[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>10</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_C[15:8]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-quat-cd"><span class="std std-ref">DREG_QUAT_CD</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>11</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_C[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>12</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_D[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>13</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_D[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>14</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_TIME[31:24]</span></code></p></td>
+<td rowspan="4"><p><a class="reference internal" href="register_map_v2.html#dreg-quat-time"><span class="std std-ref">DREG_QUAT_TIME</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>15</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_TIME[23:16]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>16</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_TIME[15:8]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>17</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QUAT_TIME[7:0]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>18</strong></p></td>
+<td><p>Checksum 1</p></td>
+<td rowspan="2"></td>
+</tr>
+<tr class="row-even"><td><p><strong>19</strong></p></td>
+<td><p>Checksum 2</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="register_map_current.html" class="btn btn-neutral float-right" title="Register Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Redshift Labs serial documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Redshift Labs Pty Ltd.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

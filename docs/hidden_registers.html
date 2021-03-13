@@ -1,0 +1,2750 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Hidden registers &mdash; redshiftlabs_serial  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Binary packet structure V2" href="binary_packet_v2.html" />
+    <link rel="prev" title="Register Overview" href="register_map_current.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> redshiftlabs_serial
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="binary_packet.html">Binary packet structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_current.html">Register Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hidden registers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Hidden registers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-gyro-variance"><span class="xref std std-ref">HIDDEN_GYRO_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-0-0x00-0b00000000">Address: 0  |  0x00  |  0b00000000</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-accel-variance"><span class="xref std std-ref">HIDDEN_ACCEL_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-1-0x01-0b00000001">Address: 1  |  0x01  |  0b00000001</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-mag-variance"><span class="xref std std-ref">HIDDEN_MAG_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-2-0x02-0b00000010">Address: 2  |  0x02  |  0b00000010</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-gps-course-variance"><span class="xref std std-ref">HIDDEN_GPS_COURSE_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-3-0x03-0b00000011">Address: 3  |  0x03  |  0b00000011</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-gps-position-variance"><span class="xref std std-ref">HIDDEN_GPS_POSITION_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-4-0x04-0b00000100">Address: 4  |  0x04  |  0b00000100</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-gps-velocity-variance"><span class="xref std std-ref">HIDDEN_GPS_VELOCITY_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-5-0x05-0b00000101">Address: 5  |  0x05  |  0b00000101</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-static-press-variance"><span class="xref std std-ref">HIDDEN_STATIC_PRESS_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-6-0x06-0b00000110">Address: 6  |  0x06  |  0b00000110</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-diff-press-variance"><span class="xref std std-ref">HIDDEN_DIFF_PRESS_VARIANCE</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-7-0x07-0b00000111">Address: 7  |  0x07  |  0b00000111</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-q-uvw"><span class="xref std std-ref">HIDDEN_Q_UVW</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-9-0x09-0b00001001">Address: 9  |  0x09  |  0b00001001</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-q-quaternion"><span class="xref std std-ref">HIDDEN_Q_QUATERNION</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-10-0x0a-0b00001010">Address: 10  |  0x0A  |  0b00001010</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-q-gps-position"><span class="xref std std-ref">HIDDEN_Q_GPS_POSITION</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-11-0x0b-0b00001011">Address: 11  |  0x0B  |  0b00001011</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-q-bias"><span class="xref std std-ref">HIDDEN_Q_BIAS</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-12-0x0c-0b00001100">Address: 12  |  0x0C  |  0b00001100</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-q-euler-angles"><span class="xref std std-ref">HIDDEN_Q_EULER_ANGLES</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-13-0x0d-0b00001101">Address: 13  |  0x0D  |  0b00001101</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-low-vg-accel-noise-factor"><span class="xref std std-ref">HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-14-0x0e-0b00001110">Address: 14  |  0x0E  |  0b00001110</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-lpf-tau-groundspeed"><span class="xref std std-ref">HIDDEN_LPF_TAU_GROUNDSPEED</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-16-0x10-0b00010000">Address: 16  |  0x10  |  0b00010000</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-lpf-tau-accel"><span class="xref std std-ref">HIDDEN_LPF_TAU_ACCEL</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-17-0x11-0b00010001">Address: 17  |  0x11  |  0b00010001</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-lpf-tau-gyro"><span class="xref std std-ref">HIDDEN_LPF_TAU_GYRO</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-18-0x12-0b00010010">Address: 18  |  0x12  |  0b00010010</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-lpf-tau-mag"><span class="xref std std-ref">HIDDEN_LPF_TAU_MAG</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-19-0x13-0b00010011">Address: 19  |  0x13  |  0b00010011</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-0-to-hidden-c-gyro-bias-z-pow-3"><span class="xref std std-ref">HIDDEN_C_GYRO_BIAS_X_POW_0 to HIDDEN_C_GYRO_BIAS_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-25-to-36-0x19-to-0x24-0b00011001-to-0b00100100">Address: 25 to 36 |  0x19 to 0x24  |  0b00011001 to 0b00100100</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-0-to-hidden-c-gyro-scale-z-pow-3"><span class="xref std std-ref">HIDDEN_C_GYRO_SCALE_X_POW_0 to HIDDEN_C_GYRO_SCALE_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-37-to-48-0x25-to-0x30-0b00100101-to-0b00110000">Address: 37 to 48 |  0x25 to 0x30  |  0b00100101 to 0b00110000</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-gyro-alignment1-1-to-hidden-gyro-alignment3-3"><span class="xref std std-ref">HIDDEN_GYRO_ALIGNMENT1_1 to HIDDEN_GYRO_ALIGNMENT3_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-49-to-57-0x31-to-0x39-0b00110001-to-0b00111001">Address: 49 to 57 |  0x31 to 0x39  |  0b00110001 to 0b00111001</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-accel-bias-x-pow-0-to-hidden-c-accel-bias-z-pow-3"><span class="xref std std-ref">HIDDEN_C_ACCEL_BIAS_X_POW_0 to HIDDEN_C_ACCEL_BIAS_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-58-to-69-0x3a-to-0x45-0b00111010-to-0b01000101">Address: 58 to 69 |  0x3A to 0x45  |  0b00111010 to 0b01000101</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-accel-scale-x-pow-0-to-hidden-c-accel-scale-z-pow-3"><span class="xref std std-ref">HIDDEN_C_ACCEL_SCALE_X_POW_0 to HIDDEN_C_ACCEL_SCALE_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-70-to-81-0x46-to-0x51-0b01000110-to-0b01010001">Address: 70 to 81 |  0x46 to 0x51  |  0b01000110 to 0b01010001</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-accel-alignment1-1-to-hidden-accel-alignment3-3"><span class="xref std std-ref">HIDDEN_ACCEL_ALIGNMENT1_1 to HIDDEN_ACCEL_ALIGNMENT3_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-82-to-90-0x52-to-0x5a-0b01010010-to-0b01011010">Address: 82 to 90 |  0x52 to 0x5A  |  0b01010010 to 0b01011010</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-mag-bias-x-pow-0-to-hidden-c-mag-bias-z-pow-3"><span class="xref std std-ref">HIDDEN_C_MAG_BIAS_X_POW_0 to HIDDEN_C_MAG_BIAS_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-91-to-102-0x5b-to-0x66-0b01011011-to-0b01100110">Address: 91 to 102 |  0x5B to 0x66  |  0b01011011 to 0b01100110</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-c-mag-scale-x-pow-0-to-hidden-c-mag-scale-z-pow-3"><span class="xref std std-ref">HIDDEN_C_MAG_SCALE_X_POW_0 to HIDDEN_C_MAG_SCALE_Z_POW_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-103-to-114-0x67-to-0x72-0b01100111-to-0b01110010">Address: 103 to 114 |  0x67 to 0x72  |  0b01100111 to 0b01110010</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-mag-alignment1-1-to-hidden-mag-alignment3-3"><span class="xref std std-ref">HIDDEN_MAG_ALIGNMENT1_1 to HIDDEN_MAG_ALIGNMENT3_3</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-115-to-123-0x73-to-0x7b-0b01110011-to-0b01111011">Address: 115 to 123 |  0x73 to 0x7B  |  0b01110011 to 0b01111011</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-mag-reference-x"><span class="xref std std-ref">HIDDEN_MAG_REFERENCE_X</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-124-0x7c-0b01111100">Address: 124  |  0x7C  |  0b01111100</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-mag-reference-y"><span class="xref std std-ref">HIDDEN_MAG_REFERENCE_Y</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-125-0x7d-0b01111101">Address: 125  |  0x7D  |  0b01111101</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hidden-mag-reference-z"><span class="xref std std-ref">HIDDEN_MAG_REFERENCE_Z</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#address-126-0x7e-0b01111110">Address: 126  |  0x7E  |  0b01111110</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="binary_packet_v2.html">Binary packet structure V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_v2.html">Register map V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidden_registers_v2.html">Hidden registers V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shearwater_howto.html">Shearwater HowTo</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">redshiftlabs_serial</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Hidden registers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hidden-registers">
+<h1><a class="toc-backref" href="#table-of-contents">Hidden registers</a><a class="headerlink" href="#hidden-registers" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#hidden-registers" id="id54">Hidden registers</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id55">Hidden registers</a></p>
+<ul>
+<li><p><a class="reference internal" href="#hidden-gyro-variance" id="id56"><a class="reference internal" href="#hidden-gyro-variance"><span class="std std-ref">HIDDEN_GYRO_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-accel-variance" id="id57"><a class="reference internal" href="#hidden-accel-variance"><span class="std std-ref">HIDDEN_ACCEL_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-mag-variance" id="id58"><a class="reference internal" href="#hidden-mag-variance"><span class="std std-ref">HIDDEN_MAG_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-gps-course-variance" id="id59"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-course-variance"><span class="std std-ref">HIDDEN_GPS_COURSE_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-gps-position-variance" id="id60"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-position-variance"><span class="std std-ref">HIDDEN_GPS_POSITION_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-gps-velocity-variance" id="id61"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-velocity-variance"><span class="std std-ref">HIDDEN_GPS_VELOCITY_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-static-press-variance" id="id62"><a class="reference internal" href="hidden_registers_v2.html#hidden-static-press-variance"><span class="std std-ref">HIDDEN_STATIC_PRESS_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-diff-press-variance" id="id63"><a class="reference internal" href="hidden_registers_v2.html#hidden-diff-press-variance"><span class="std std-ref">HIDDEN_DIFF_PRESS_VARIANCE</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-q-uvw" id="id64"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-uvw"><span class="std std-ref">HIDDEN_Q_UVW</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-q-quaternion" id="id65"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-quaternion"><span class="std std-ref">HIDDEN_Q_QUATERNION</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-q-gps-position" id="id66"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-gps-position"><span class="std std-ref">HIDDEN_Q_GPS_POSITION</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-q-bias" id="id67"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-bias"><span class="std std-ref">HIDDEN_Q_BIAS</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-q-euler-angles" id="id68"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-euler-angles"><span class="std std-ref">HIDDEN_Q_EULER_ANGLES</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-low-vg-accel-noise-factor" id="id69"><a class="reference internal" href="hidden_registers_v2.html#hidden-low-vg-accel-noise-factor"><span class="std std-ref">HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-lpf-tau-groundspeed" id="id70"><a class="reference internal" href="hidden_registers_v2.html#hidden-lpf-tau-groundspeed"><span class="std std-ref">HIDDEN_LPF_TAU_GROUNDSPEED</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-lpf-tau-accel" id="id71"><a class="reference internal" href="#hidden-lpf-tau-accel"><span class="std std-ref">HIDDEN_LPF_TAU_ACCEL</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-lpf-tau-gyro" id="id72"><a class="reference internal" href="#hidden-lpf-tau-gyro"><span class="std std-ref">HIDDEN_LPF_TAU_GYRO</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-lpf-tau-mag" id="id73"><a class="reference internal" href="#hidden-lpf-tau-mag"><span class="std std-ref">HIDDEN_LPF_TAU_MAG</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-0-to-hidden-c-gyro-bias-z-pow-3" id="id74"><span class="xref std std-ref">HIDDEN_C_GYRO_BIAS_X_POW_0 to HIDDEN_C_GYRO_BIAS_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-0-to-hidden-c-gyro-scale-z-pow-3" id="id75"><span class="xref std std-ref">HIDDEN_C_GYRO_SCALE_X_POW_0 to HIDDEN_C_GYRO_SCALE_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-gyro-alignment1-1-to-hidden-gyro-alignment3-3" id="id76"><span class="xref std std-ref">HIDDEN_GYRO_ALIGNMENT1_1 to HIDDEN_GYRO_ALIGNMENT3_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-accel-bias-x-pow-0-to-hidden-c-accel-bias-z-pow-3" id="id77"><span class="xref std std-ref">HIDDEN_C_ACCEL_BIAS_X_POW_0 to HIDDEN_C_ACCEL_BIAS_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-accel-scale-x-pow-0-to-hidden-c-accel-scale-z-pow-3" id="id78"><span class="xref std std-ref">HIDDEN_C_ACCEL_SCALE_X_POW_0 to HIDDEN_C_ACCEL_SCALE_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-accel-alignment1-1-to-hidden-accel-alignment3-3" id="id79"><span class="xref std std-ref">HIDDEN_ACCEL_ALIGNMENT1_1 to HIDDEN_ACCEL_ALIGNMENT3_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-mag-bias-x-pow-0-to-hidden-c-mag-bias-z-pow-3" id="id80"><span class="xref std std-ref">HIDDEN_C_MAG_BIAS_X_POW_0 to HIDDEN_C_MAG_BIAS_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-c-mag-scale-x-pow-0-to-hidden-c-mag-scale-z-pow-3" id="id81"><span class="xref std std-ref">HIDDEN_C_MAG_SCALE_X_POW_0 to HIDDEN_C_MAG_SCALE_Z_POW_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-mag-alignment1-1-to-hidden-mag-alignment3-3" id="id82"><span class="xref std std-ref">HIDDEN_MAG_ALIGNMENT1_1 to HIDDEN_MAG_ALIGNMENT3_3</span></a></p></li>
+<li><p><a class="reference internal" href="#hidden-mag-reference-x" id="id83"><a class="reference internal" href="#hidden-mag-reference-x"><span class="std std-ref">HIDDEN_MAG_REFERENCE_X</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-mag-reference-y" id="id84"><a class="reference internal" href="#hidden-mag-reference-y"><span class="std std-ref">HIDDEN_MAG_REFERENCE_Y</span></a></a></p></li>
+<li><p><a class="reference internal" href="#hidden-mag-reference-z" id="id85"><a class="reference internal" href="#hidden-mag-reference-z"><span class="std std-ref">HIDDEN_MAG_REFERENCE_Z</span></a></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Below is the description summary of the used to-date hidden registers in the <cite>UM7</cite> board.</p>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#table-of-contents">Hidden registers</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="id23">
+<caption><span class="caption-number">Table 120 </span><span class="caption-text">Hidden registers</span><a class="headerlink" href="#id23" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 33%" />
+<col style="width: 52%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Address</p></td>
+<td><p>Register Name</p></td>
+<td><p>Register Description</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x00</span> <span class="pre">(0d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-variance">HIDDEN_GYRO_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x01</span> <span class="pre">(1d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-variance">HIDDEN_ACCEL_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x02</span> <span class="pre">(2d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-variance">HIDDEN_MAG_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x03</span> <span class="pre">(3d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gps-course-variance">HIDDEN_GPS_COURSE_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x04</span> <span class="pre">(4d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gps-position-variance">HIDDEN_GPS_POSITION_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x05</span> <span class="pre">(5d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gps-velocity-variance">HIDDEN_GPS_VELOCITY_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x06</span> <span class="pre">(6d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-static-press-variance">HIDDEN_STATIC_PRESS_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x07</span> <span class="pre">(7d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-diff-press-variance">HIDDEN_DIFF_PRESS_VARIANCE</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x09</span> <span class="pre">(9d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-q-uvw">HIDDEN_Q_UVW</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x0A</span> <span class="pre">(10d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-q-quaternion">HIDDEN_Q_QUATERNION</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x0B</span> <span class="pre">(11d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-q-gps-position">HIDDEN_Q_GPS_POSITION</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x0C</span> <span class="pre">(12d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-q-bias">HIDDEN_Q_BIAS</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x0D</span> <span class="pre">(13d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-q-euler-angles">HIDDEN_Q_EULER_ANGLES</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x0E</span> <span class="pre">(14d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-low-vg-accel-noise-factor">HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x10</span> <span class="pre">(16d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-lpf-tau-groundspeed">HIDDEN_LPF_TAU_GROUNDSPEED</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x11</span> <span class="pre">(17d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-lpf-tau-accel">HIDDEN_LPF_TAU_ACCEL</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x12</span> <span class="pre">(18d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-lpf-tau-gyro">HIDDEN_LPF_TAU_GYRO</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x13</span> <span class="pre">(19d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-lpf-tau-mag">HIDDEN_LPF_TAU_MAG</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x19</span> <span class="pre">(25d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-0">HIDDEN_C_GYRO_BIAS_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x1A</span> <span class="pre">(26d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-1">HIDDEN_C_GYRO_BIAS_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x1B</span> <span class="pre">(27d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-2">HIDDEN_C_GYRO_BIAS_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x1C</span> <span class="pre">(28d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-x-pow-3">HIDDEN_C_GYRO_BIAS_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x1D</span> <span class="pre">(29d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-y-pow-0">HIDDEN_C_GYRO_BIAS_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x1E</span> <span class="pre">(30d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-y-pow-1">HIDDEN_C_GYRO_BIAS_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x1F</span> <span class="pre">(31d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-y-pow-2">HIDDEN_C_GYRO_BIAS_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x20</span> <span class="pre">(32d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-y-pow-3">HIDDEN_C_GYRO_BIAS_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x21</span> <span class="pre">(33d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-z-pow-0">HIDDEN_C_GYRO_BIAS_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x22</span> <span class="pre">(34d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-z-pow-1">HIDDEN_C_GYRO_BIAS_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x23</span> <span class="pre">(35d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-z-pow-2">HIDDEN_C_GYRO_BIAS_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x24</span> <span class="pre">(36d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-bias-z-pow-3">HIDDEN_C_GYRO_BIAS_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x25</span> <span class="pre">(37d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-0">HIDDEN_C_GYRO_SCALE_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x26</span> <span class="pre">(38d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-1">HIDDEN_C_GYRO_SCALE_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x27</span> <span class="pre">(39d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-2">HIDDEN_C_GYRO_SCALE_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x28</span> <span class="pre">(40d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-x-pow-3">HIDDEN_C_GYRO_SCALE_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x29</span> <span class="pre">(41d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-y-pow-0">HIDDEN_C_GYRO_SCALE_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x2A</span> <span class="pre">(42d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-y-pow-1">HIDDEN_C_GYRO_SCALE_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x2B</span> <span class="pre">(43d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-y-pow-2">HIDDEN_C_GYRO_SCALE_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x2C</span> <span class="pre">(44d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-y-pow-3">HIDDEN_C_GYRO_SCALE_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x2D</span> <span class="pre">(45d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-z-pow-0">HIDDEN_C_GYRO_SCALE_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x2E</span> <span class="pre">(46d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-z-pow-1">HIDDEN_C_GYRO_SCALE_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x2F</span> <span class="pre">(47d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-z-pow-2">HIDDEN_C_GYRO_SCALE_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x30</span> <span class="pre">(48d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-gyro-scale-z-pow-3">HIDDEN_C_GYRO_SCALE_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x31</span> <span class="pre">(49d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment1-1">HIDDEN_GYRO_ALIGNMENT1_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x32</span> <span class="pre">(50d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment1-2">HIDDEN_GYRO_ALIGNMENT1_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x33</span> <span class="pre">(51d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment1-3">HIDDEN_GYRO_ALIGNMENT1_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x34</span> <span class="pre">(52d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment2-1">HIDDEN_GYRO_ALIGNMENT2_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x35</span> <span class="pre">(53d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment2-2">HIDDEN_GYRO_ALIGNMENT2_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x36</span> <span class="pre">(54d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment2-3">HIDDEN_GYRO_ALIGNMENT2_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x37</span> <span class="pre">(55d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment3-1">HIDDEN_GYRO_ALIGNMENT3_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x38</span> <span class="pre">(56d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment3-2">HIDDEN_GYRO_ALIGNMENT3_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x39</span> <span class="pre">(57d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-gyro-alignment3-3">HIDDEN_GYRO_ALIGNMENT3_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x3A</span> <span class="pre">(58d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-x-pow-0">HIDDEN_C_ACCEL_BIAS_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x3B</span> <span class="pre">(59d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-x-pow-1">HIDDEN_C_ACCEL_BIAS_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x3C</span> <span class="pre">(60d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-x-pow-2">HIDDEN_C_ACCEL_BIAS_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x3D</span> <span class="pre">(61d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-x-pow-3">HIDDEN_C_ACCEL_BIAS_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x3E</span> <span class="pre">(62d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-y-pow-0">HIDDEN_C_ACCEL_BIAS_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x3F</span> <span class="pre">(63d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-y-pow-1">HIDDEN_C_ACCEL_BIAS_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x40</span> <span class="pre">(64d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-y-pow-2">HIDDEN_C_ACCEL_BIAS_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x41</span> <span class="pre">(65d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-y-pow-3">HIDDEN_C_ACCEL_BIAS_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x42</span> <span class="pre">(66d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-z-pow-0">HIDDEN_C_ACCEL_BIAS_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x43</span> <span class="pre">(67d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-z-pow-1">HIDDEN_C_ACCEL_BIAS_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x44</span> <span class="pre">(68d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-z-pow-2">HIDDEN_C_ACCEL_BIAS_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x45</span> <span class="pre">(69d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-bias-z-pow-3">HIDDEN_C_ACCEL_BIAS_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x46</span> <span class="pre">(70d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-x-pow-0">HIDDEN_C_ACCEL_SCALE_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x47</span> <span class="pre">(71d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-x-pow-1">HIDDEN_C_ACCEL_SCALE_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x48</span> <span class="pre">(72d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-x-pow-2">HIDDEN_C_ACCEL_SCALE_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x49</span> <span class="pre">(73d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-x-pow-3">HIDDEN_C_ACCEL_SCALE_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x4A</span> <span class="pre">(74d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-y-pow-0">HIDDEN_C_ACCEL_SCALE_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x4B</span> <span class="pre">(75d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-y-pow-1">HIDDEN_C_ACCEL_SCALE_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x4C</span> <span class="pre">(76d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-y-pow-2">HIDDEN_C_ACCEL_SCALE_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x4D</span> <span class="pre">(77d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-y-pow-3">HIDDEN_C_ACCEL_SCALE_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x4E</span> <span class="pre">(78d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-z-pow-0">HIDDEN_C_ACCEL_SCALE_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x4F</span> <span class="pre">(79d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-z-pow-1">HIDDEN_C_ACCEL_SCALE_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x50</span> <span class="pre">(80d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-z-pow-2">HIDDEN_C_ACCEL_SCALE_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x51</span> <span class="pre">(81d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-accel-scale-z-pow-3">HIDDEN_C_ACCEL_SCALE_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x52</span> <span class="pre">(82d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment1-1">HIDDEN_ACCEL_ALIGNMENT1_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x53</span> <span class="pre">(83d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment1-2">HIDDEN_ACCEL_ALIGNMENT1_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x54</span> <span class="pre">(84d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment1-3">HIDDEN_ACCEL_ALIGNMENT1_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x55</span> <span class="pre">(85d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment2-1">HIDDEN_ACCEL_ALIGNMENT2_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x56</span> <span class="pre">(86d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment2-2">HIDDEN_ACCEL_ALIGNMENT2_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x57</span> <span class="pre">(87d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment2-3">HIDDEN_ACCEL_ALIGNMENT2_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x58</span> <span class="pre">(88d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment3-1">HIDDEN_ACCEL_ALIGNMENT3_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x59</span> <span class="pre">(89d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment3-2">HIDDEN_ACCEL_ALIGNMENT3_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x5A</span> <span class="pre">(90d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-accel-alignment3-3">HIDDEN_ACCEL_ALIGNMENT3_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x5B</span> <span class="pre">(91d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-x-pow-0">HIDDEN_C_MAG_BIAS_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x5C</span> <span class="pre">(92d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-x-pow-1">HIDDEN_C_MAG_BIAS_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x5D</span> <span class="pre">(93d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-x-pow-2">HIDDEN_C_MAG_BIAS_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x5E</span> <span class="pre">(94d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-x-pow-3">HIDDEN_C_MAG_BIAS_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x5F</span> <span class="pre">(95d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-y-pow-0">HIDDEN_C_MAG_BIAS_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x60</span> <span class="pre">(96d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-y-pow-1">HIDDEN_C_MAG_BIAS_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x61</span> <span class="pre">(97d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-y-pow-2">HIDDEN_C_MAG_BIAS_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x62</span> <span class="pre">(98d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-y-pow-3">HIDDEN_C_MAG_BIAS_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x63</span> <span class="pre">(99d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-z-pow-0">HIDDEN_C_MAG_BIAS_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x64</span> <span class="pre">(100d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-z-pow-1">HIDDEN_C_MAG_BIAS_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x65</span> <span class="pre">(101d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-z-pow-2">HIDDEN_C_MAG_BIAS_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x66</span> <span class="pre">(102d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-bias-z-pow-3">HIDDEN_C_MAG_BIAS_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x67</span> <span class="pre">(103d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-x-pow-0">HIDDEN_C_MAG_SCALE_X_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x68</span> <span class="pre">(104d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-x-pow-1">HIDDEN_C_MAG_SCALE_X_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x69</span> <span class="pre">(105d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-x-pow-2">HIDDEN_C_MAG_SCALE_X_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x6A</span> <span class="pre">(106d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-x-pow-3">HIDDEN_C_MAG_SCALE_X_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x6B</span> <span class="pre">(107d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-y-pow-0">HIDDEN_C_MAG_SCALE_Y_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x6C</span> <span class="pre">(108d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-y-pow-1">HIDDEN_C_MAG_SCALE_Y_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x6D</span> <span class="pre">(109d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-y-pow-2">HIDDEN_C_MAG_SCALE_Y_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x6E</span> <span class="pre">(110d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-y-pow-3">HIDDEN_C_MAG_SCALE_Y_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x6F</span> <span class="pre">(111d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-z-pow-0">HIDDEN_C_MAG_SCALE_Z_POW_0</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x70</span> <span class="pre">(112d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-z-pow-1">HIDDEN_C_MAG_SCALE_Z_POW_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x71</span> <span class="pre">(113d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-z-pow-2">HIDDEN_C_MAG_SCALE_Z_POW_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x72</span> <span class="pre">(114d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-c-mag-scale-z-pow-3">HIDDEN_C_MAG_SCALE_Z_POW_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x73</span> <span class="pre">(115d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment1-1">HIDDEN_MAG_ALIGNMENT1_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x74</span> <span class="pre">(116d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment1-2">HIDDEN_MAG_ALIGNMENT1_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x75</span> <span class="pre">(117d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment1-3">HIDDEN_MAG_ALIGNMENT1_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x76</span> <span class="pre">(118d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment2-1">HIDDEN_MAG_ALIGNMENT2_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x77</span> <span class="pre">(119d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment2-2">HIDDEN_MAG_ALIGNMENT2_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x78</span> <span class="pre">(120d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment2-3">HIDDEN_MAG_ALIGNMENT2_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x79</span> <span class="pre">(121d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment3-1">HIDDEN_MAG_ALIGNMENT3_1</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x7A</span> <span class="pre">(122d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment3-2">HIDDEN_MAG_ALIGNMENT3_2</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x7B</span> <span class="pre">(123d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-alignment3-3">HIDDEN_MAG_ALIGNMENT3_3</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x7C</span> <span class="pre">(124d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-reference-x">HIDDEN_MAG_REFERENCE_X</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x7D</span> <span class="pre">(125d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-reference-y">HIDDEN_MAG_REFERENCE_Y</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x7E</span> <span class="pre">(126d)</span></code></p></td>
+<td><p><a class="reference internal" href="#hidden-mag-reference-z">HIDDEN_MAG_REFERENCE_Z</a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="hidden-gyro-variance">
+<span id="id2"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-gyro-variance"><span class="std std-ref">HIDDEN_GYRO_VARIANCE</span></a></a><a class="headerlink" href="#hidden-gyro-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-0-0x00-0b00000000">
+<h4>Address: 0  |  0x00  |  0b00000000<a class="headerlink" href="#address-0-0x00-0b00000000" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id24">
+<caption><span class="caption-number">Table 121 </span><span class="caption-text"><strong>HIDDEN_GYRO_VARIANCE</strong></span><a class="headerlink" href="#id24" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-accel-variance">
+<span id="id3"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-accel-variance"><span class="std std-ref">HIDDEN_ACCEL_VARIANCE</span></a></a><a class="headerlink" href="#hidden-accel-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-1-0x01-0b00000001">
+<h4>Address: 1  |  0x01  |  0b00000001<a class="headerlink" href="#address-1-0x01-0b00000001" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id25">
+<caption><span class="caption-number">Table 122 </span><span class="caption-text"><strong>HIDDEN_ACCEL_VARIANCE</strong></span><a class="headerlink" href="#id25" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-mag-variance">
+<span id="id4"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-mag-variance"><span class="std std-ref">HIDDEN_MAG_VARIANCE</span></a></a><a class="headerlink" href="#hidden-mag-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-2-0x02-0b00000010">
+<h4>Address: 2  |  0x02  |  0b00000010<a class="headerlink" href="#address-2-0x02-0b00000010" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id26">
+<caption><span class="caption-number">Table 123 </span><span class="caption-text"><strong>HIDDEN_MAG_VARIANCE</strong></span><a class="headerlink" href="#id26" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-gps-course-variance">
+<span id="id5"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-course-variance"><span class="std std-ref">HIDDEN_GPS_COURSE_VARIANCE</span></a></a><a class="headerlink" href="#hidden-gps-course-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-3-0x03-0b00000011">
+<h4>Address: 3  |  0x03  |  0b00000011<a class="headerlink" href="#address-3-0x03-0b00000011" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id27">
+<caption><span class="caption-number">Table 124 </span><span class="caption-text"><strong>HIDDEN_GPS_COURSE_VARIANCE</strong></span><a class="headerlink" href="#id27" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GPS_COURSE_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-gps-position-variance">
+<span id="id6"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-position-variance"><span class="std std-ref">HIDDEN_GPS_POSITION_VARIANCE</span></a></a><a class="headerlink" href="#hidden-gps-position-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-4-0x04-0b00000100">
+<h4>Address: 4  |  0x04  |  0b00000100<a class="headerlink" href="#address-4-0x04-0b00000100" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id28">
+<caption><span class="caption-number">Table 125 </span><span class="caption-text"><strong>HIDDEN_GPS_POSITION_VARIANCE</strong></span><a class="headerlink" href="#id28" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GPS_POSITION_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-gps-velocity-variance">
+<span id="id7"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-gps-velocity-variance"><span class="std std-ref">HIDDEN_GPS_VELOCITY_VARIANCE</span></a></a><a class="headerlink" href="#hidden-gps-velocity-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-5-0x05-0b00000101">
+<h4>Address: 5  |  0x05  |  0b00000101<a class="headerlink" href="#address-5-0x05-0b00000101" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id29">
+<caption><span class="caption-number">Table 126 </span><span class="caption-text"><strong>HIDDEN_GPS_VELOCITY_VARIANCE</strong></span><a class="headerlink" href="#id29" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GPS_VELOCITY_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-static-press-variance">
+<span id="id8"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-static-press-variance"><span class="std std-ref">HIDDEN_STATIC_PRESS_VARIANCE</span></a></a><a class="headerlink" href="#hidden-static-press-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-6-0x06-0b00000110">
+<h4>Address: 6  |  0x06  |  0b00000110<a class="headerlink" href="#address-6-0x06-0b00000110" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id30">
+<caption><span class="caption-number">Table 127 </span><span class="caption-text"><strong>HIDDEN_STATIC_PRESS_VARIANCE</strong></span><a class="headerlink" href="#id30" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_STATIC_PRESS_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-diff-press-variance">
+<span id="id9"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-diff-press-variance"><span class="std std-ref">HIDDEN_DIFF_PRESS_VARIANCE</span></a></a><a class="headerlink" href="#hidden-diff-press-variance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-7-0x07-0b00000111">
+<h4>Address: 7  |  0x07  |  0b00000111<a class="headerlink" href="#address-7-0x07-0b00000111" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id31">
+<caption><span class="caption-number">Table 128 </span><span class="caption-text"><strong>HIDDEN_DIFF_PRESS_VARIANCE</strong></span><a class="headerlink" href="#id31" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_DIFF_PRESS_VARIANCE: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-q-uvw">
+<span id="id10"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-uvw"><span class="std std-ref">HIDDEN_Q_UVW</span></a></a><a class="headerlink" href="#hidden-q-uvw" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-9-0x09-0b00001001">
+<h4>Address: 9  |  0x09  |  0b00001001<a class="headerlink" href="#address-9-0x09-0b00001001" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id32">
+<caption><span class="caption-number">Table 129 </span><span class="caption-text"><strong>HIDDEN_Q_UVW</strong></span><a class="headerlink" href="#id32" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_Q_UVW: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-q-quaternion">
+<span id="id11"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-quaternion"><span class="std std-ref">HIDDEN_Q_QUATERNION</span></a></a><a class="headerlink" href="#hidden-q-quaternion" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-10-0x0a-0b00001010">
+<h4>Address: 10  |  0x0A  |  0b00001010<a class="headerlink" href="#address-10-0x0a-0b00001010" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id33">
+<caption><span class="caption-number">Table 130 </span><span class="caption-text"><strong>HIDDEN_Q_QUATERNION</strong></span><a class="headerlink" href="#id33" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_Q_QUATERNION: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-q-gps-position">
+<span id="id12"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-gps-position"><span class="std std-ref">HIDDEN_Q_GPS_POSITION</span></a></a><a class="headerlink" href="#hidden-q-gps-position" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-11-0x0b-0b00001011">
+<h4>Address: 11  |  0x0B  |  0b00001011<a class="headerlink" href="#address-11-0x0b-0b00001011" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id34">
+<caption><span class="caption-number">Table 131 </span><span class="caption-text"><strong>HIDDEN_Q_GPS_POSITION</strong></span><a class="headerlink" href="#id34" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_Q_GPS_POSITION: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-q-bias">
+<span id="id13"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-bias"><span class="std std-ref">HIDDEN_Q_BIAS</span></a></a><a class="headerlink" href="#hidden-q-bias" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-12-0x0c-0b00001100">
+<h4>Address: 12  |  0x0C  |  0b00001100<a class="headerlink" href="#address-12-0x0c-0b00001100" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id35">
+<caption><span class="caption-number">Table 132 </span><span class="caption-text"><strong>HIDDEN_Q_BIAS</strong></span><a class="headerlink" href="#id35" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_Q_BIAS: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-q-euler-angles">
+<span id="id14"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-q-euler-angles"><span class="std std-ref">HIDDEN_Q_EULER_ANGLES</span></a></a><a class="headerlink" href="#hidden-q-euler-angles" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-13-0x0d-0b00001101">
+<h4>Address: 13  |  0x0D  |  0b00001101<a class="headerlink" href="#address-13-0x0d-0b00001101" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id36">
+<caption><span class="caption-number">Table 133 </span><span class="caption-text"><strong>HIDDEN_Q_EULER_ANGLES</strong></span><a class="headerlink" href="#id36" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_Q_EULER_ANGLES: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-low-vg-accel-noise-factor">
+<span id="id15"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-low-vg-accel-noise-factor"><span class="std std-ref">HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR</span></a></a><a class="headerlink" href="#hidden-low-vg-accel-noise-factor" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-14-0x0e-0b00001110">
+<h4>Address: 14  |  0x0E  |  0b00001110<a class="headerlink" href="#address-14-0x0e-0b00001110" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id37">
+<caption><span class="caption-number">Table 134 </span><span class="caption-text"><strong>HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR</strong></span><a class="headerlink" href="#id37" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_LOW_VG_ACCEL_NOISE_FACTOR: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-lpf-tau-groundspeed">
+<span id="id16"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="hidden_registers_v2.html#hidden-lpf-tau-groundspeed"><span class="std std-ref">HIDDEN_LPF_TAU_GROUNDSPEED</span></a></a><a class="headerlink" href="#hidden-lpf-tau-groundspeed" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-16-0x10-0b00010000">
+<h4>Address: 16  |  0x10  |  0b00010000<a class="headerlink" href="#address-16-0x10-0b00010000" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id38">
+<caption><span class="caption-number">Table 135 </span><span class="caption-text"><strong>HIDDEN_LPF_TAU_GROUNDSPEED</strong></span><a class="headerlink" href="#id38" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_LPF_TAU_GROUNDSPEED: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-lpf-tau-accel">
+<span id="id17"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-lpf-tau-accel"><span class="std std-ref">HIDDEN_LPF_TAU_ACCEL</span></a></a><a class="headerlink" href="#hidden-lpf-tau-accel" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-17-0x11-0b00010001">
+<h4>Address: 17  |  0x11  |  0b00010001<a class="headerlink" href="#address-17-0x11-0b00010001" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id39">
+<caption><span class="caption-number">Table 136 </span><span class="caption-text"><strong>HIDDEN_LPF_TAU_ACCEL</strong></span><a class="headerlink" href="#id39" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_LPF_TAU_ACCEL: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-lpf-tau-gyro">
+<span id="id18"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-lpf-tau-gyro"><span class="std std-ref">HIDDEN_LPF_TAU_GYRO</span></a></a><a class="headerlink" href="#hidden-lpf-tau-gyro" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-18-0x12-0b00010010">
+<h4>Address: 18  |  0x12  |  0b00010010<a class="headerlink" href="#address-18-0x12-0b00010010" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id40">
+<caption><span class="caption-number">Table 137 </span><span class="caption-text"><strong>HIDDEN_LPF_TAU_GYRO</strong></span><a class="headerlink" href="#id40" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_LPF_TAU_GYRO: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-lpf-tau-mag">
+<span id="id19"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-lpf-tau-mag"><span class="std std-ref">HIDDEN_LPF_TAU_MAG</span></a></a><a class="headerlink" href="#hidden-lpf-tau-mag" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-19-0x13-0b00010011">
+<h4>Address: 19  |  0x13  |  0b00010011<a class="headerlink" href="#address-19-0x13-0b00010011" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id41">
+<caption><span class="caption-number">Table 138 </span><span class="caption-text"><strong>HIDDEN_LPF_TAU_MAG</strong></span><a class="headerlink" href="#id41" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_LPF_TAU_MAG: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-gyro-bias-x-pow-0-to-hidden-c-gyro-bias-z-pow-3">
+<span id="hidden-c-gyro-bias-z-pow-3"></span><span id="hidden-c-gyro-bias-z-pow-2"></span><span id="hidden-c-gyro-bias-z-pow-1"></span><span id="hidden-c-gyro-bias-z-pow-0"></span><span id="hidden-c-gyro-bias-y-pow-3"></span><span id="hidden-c-gyro-bias-y-pow-2"></span><span id="hidden-c-gyro-bias-y-pow-1"></span><span id="hidden-c-gyro-bias-y-pow-0"></span><span id="hidden-c-gyro-bias-x-pow-3"></span><span id="hidden-c-gyro-bias-x-pow-2"></span><span id="hidden-c-gyro-bias-x-pow-1"></span><span id="hidden-c-gyro-bias-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_GYRO_BIAS_X_POW_0 to HIDDEN_C_GYRO_BIAS_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-gyro-bias-x-pow-0-to-hidden-c-gyro-bias-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-25-to-36-0x19-to-0x24-0b00011001-to-0b00100100">
+<h4>Address: 25 to 36 |  0x19 to 0x24  |  0b00011001 to 0b00100100<a class="headerlink" href="#address-25-to-36-0x19-to-0x24-0b00011001-to-0b00100100" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(g[t]\)</span> gyro measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}g[t]' &amp;= (g[t] - P_{bias}(T)) \times P_{scale}(T), \; \\
+\text{where}\\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3 \\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id42">
+<caption><span class="caption-number">Table 139 </span><span class="caption-text"><strong>HIDDEN_C_GYRO_BIAS_X_POW_0 to HIDDEN_C_GYRO_BIAS_Z_POW_3</strong></span><a class="headerlink" href="#id42" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_GYRO_BIAS_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_GYRO_BIAS_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_GYRO_BIAS_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_GYRO_BIAS_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_GYRO_BIAS_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_GYRO_BIAS_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_GYRO_BIAS_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_GYRO_BIAS_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_GYRO_BIAS_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_GYRO_BIAS_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_GYRO_BIAS_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_GYRO_BIAS_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-gyro-scale-x-pow-0-to-hidden-c-gyro-scale-z-pow-3">
+<span id="hidden-c-gyro-scale-z-pow-3"></span><span id="hidden-c-gyro-scale-z-pow-2"></span><span id="hidden-c-gyro-scale-z-pow-1"></span><span id="hidden-c-gyro-scale-z-pow-0"></span><span id="hidden-c-gyro-scale-y-pow-3"></span><span id="hidden-c-gyro-scale-y-pow-2"></span><span id="hidden-c-gyro-scale-y-pow-1"></span><span id="hidden-c-gyro-scale-y-pow-0"></span><span id="hidden-c-gyro-scale-x-pow-3"></span><span id="hidden-c-gyro-scale-x-pow-2"></span><span id="hidden-c-gyro-scale-x-pow-1"></span><span id="hidden-c-gyro-scale-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_GYRO_SCALE_X_POW_0 to HIDDEN_C_GYRO_SCALE_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-gyro-scale-x-pow-0-to-hidden-c-gyro-scale-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-37-to-48-0x25-to-0x30-0b00100101-to-0b00110000">
+<h4>Address: 37 to 48 |  0x25 to 0x30  |  0b00100101 to 0b00110000<a class="headerlink" href="#address-37-to-48-0x25-to-0x30-0b00100101-to-0b00110000" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(g[t]\)</span> gyro measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}g[t]' &amp;= (g[t] - P_{bias}(T)) \times P_{scale}(T), \; \\
+\text{where}\\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3 \\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id43">
+<caption><span class="caption-number">Table 140 </span><span class="caption-text"><strong>HIDDEN_C_GYRO_SCALE_X_POW_0 to HIDDEN_C_GYRO_SCALE_Z_POW_3</strong></span><a class="headerlink" href="#id43" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_GYRO_SCALE_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_GYRO_SCALE_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_GYRO_SCALE_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_GYRO_SCALE_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_GYRO_SCALE_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_GYRO_SCALE_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_GYRO_SCALE_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_GYRO_SCALE_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_GYRO_SCALE_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_GYRO_SCALE_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_GYRO_SCALE_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_GYRO_SCALE_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-gyro-alignment1-1-to-hidden-gyro-alignment3-3">
+<span id="hidden-gyro-alignment3-3"></span><span id="hidden-gyro-alignment3-2"></span><span id="hidden-gyro-alignment3-1"></span><span id="hidden-gyro-alignment2-3"></span><span id="hidden-gyro-alignment2-2"></span><span id="hidden-gyro-alignment2-1"></span><span id="hidden-gyro-alignment1-3"></span><span id="hidden-gyro-alignment1-2"></span><span id="hidden-gyro-alignment1-1"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_GYRO_ALIGNMENT1_1 to HIDDEN_GYRO_ALIGNMENT3_3</span></a><a class="headerlink" href="#hidden-gyro-alignment1-1-to-hidden-gyro-alignment3-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-49-to-57-0x31-to-0x39-0b00110001-to-0b00111001">
+<h4>Address: 49 to 57 |  0x31 to 0x39  |  0b00110001 to 0b00111001<a class="headerlink" href="#address-49-to-57-0x31-to-0x39-0b00110001-to-0b00111001" title="Permalink to this headline">¶</a></h4>
+<p>Cross-axis alignment matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} \texttt{HIDDEN_GYRO_ALIGNMENT1_1} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT1_2} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT1_3} \\
+                \texttt{HIDDEN_GYRO_ALIGNMENT2_1} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT2_2} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT2_3} \\
+                \texttt{HIDDEN_GYRO_ALIGNMENT3_1} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT3_2} &amp;
+                \texttt{HIDDEN_GYRO_ALIGNMENT3_3} \\
+\end{bmatrix}\end{split}\]</div>
+<table class="docutils align-default" id="id44">
+<caption><span class="caption-number">Table 141 </span><span class="caption-text"><strong>HIDDEN_GYRO_ALIGNMENT1_1 to HIDDEN_GYRO_ALIGNMENT3_3</strong></span><a class="headerlink" href="#id44" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT1_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT1_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT1_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT2_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT2_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT2_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT3_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT3_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_GYRO_ALIGNMENT3_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-accel-bias-x-pow-0-to-hidden-c-accel-bias-z-pow-3">
+<span id="hidden-c-accel-bias-z-pow-3"></span><span id="hidden-c-accel-bias-z-pow-2"></span><span id="hidden-c-accel-bias-z-pow-1"></span><span id="hidden-c-accel-bias-z-pow-0"></span><span id="hidden-c-accel-bias-y-pow-3"></span><span id="hidden-c-accel-bias-y-pow-2"></span><span id="hidden-c-accel-bias-y-pow-1"></span><span id="hidden-c-accel-bias-y-pow-0"></span><span id="hidden-c-accel-bias-x-pow-3"></span><span id="hidden-c-accel-bias-x-pow-2"></span><span id="hidden-c-accel-bias-x-pow-1"></span><span id="hidden-c-accel-bias-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_ACCEL_BIAS_X_POW_0 to HIDDEN_C_ACCEL_BIAS_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-accel-bias-x-pow-0-to-hidden-c-accel-bias-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-58-to-69-0x3a-to-0x45-0b00111010-to-0b01000101">
+<h4>Address: 58 to 69 |  0x3A to 0x45  |  0b00111010 to 0b01000101<a class="headerlink" href="#address-58-to-69-0x3a-to-0x45-0b00111010-to-0b01000101" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(a[t]\)</span> accelerometer measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a[t]' &amp;= a[t] \times P_{scale}(T) + P_{bias}(T), \\
+\text{where}\\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3 \\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id45">
+<caption><span class="caption-number">Table 142 </span><span class="caption-text"><strong>HIDDEN_C_ACCEL_BIAS_X_POW_0 to HIDDEN_C_ACCEL_BIAS_Z_POW_3</strong></span><a class="headerlink" href="#id45" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_ACCEL_BIAS_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_ACCEL_BIAS_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_ACCEL_BIAS_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_ACCEL_BIAS_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_ACCEL_BIAS_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_ACCEL_BIAS_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_ACCEL_BIAS_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_ACCEL_BIAS_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_ACCEL_BIAS_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_ACCEL_BIAS_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_ACCEL_BIAS_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_ACCEL_BIAS_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-accel-scale-x-pow-0-to-hidden-c-accel-scale-z-pow-3">
+<span id="hidden-c-accel-scale-z-pow-3"></span><span id="hidden-c-accel-scale-z-pow-2"></span><span id="hidden-c-accel-scale-z-pow-1"></span><span id="hidden-c-accel-scale-z-pow-0"></span><span id="hidden-c-accel-scale-y-pow-3"></span><span id="hidden-c-accel-scale-y-pow-2"></span><span id="hidden-c-accel-scale-y-pow-1"></span><span id="hidden-c-accel-scale-y-pow-0"></span><span id="hidden-c-accel-scale-x-pow-3"></span><span id="hidden-c-accel-scale-x-pow-2"></span><span id="hidden-c-accel-scale-x-pow-1"></span><span id="hidden-c-accel-scale-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_ACCEL_SCALE_X_POW_0 to HIDDEN_C_ACCEL_SCALE_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-accel-scale-x-pow-0-to-hidden-c-accel-scale-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-70-to-81-0x46-to-0x51-0b01000110-to-0b01010001">
+<h4>Address: 70 to 81 |  0x46 to 0x51  |  0b01000110 to 0b01010001<a class="headerlink" href="#address-70-to-81-0x46-to-0x51-0b01000110-to-0b01010001" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(a[t]\)</span> accelerometer measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a[t]' &amp;= a[t] \times P_{scale}(T)  +  P_{bias}(T), \; \\
+\text{where}\\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3 \\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id46">
+<caption><span class="caption-number">Table 143 </span><span class="caption-text"><strong>HIDDEN_C_ACCEL_SCALE_X_POW_0 to HIDDEN_C_ACCEL_SCALE_Z_POW_3</strong></span><a class="headerlink" href="#id46" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_ACCEL_SCALE_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_ACCEL_SCALE_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_ACCEL_SCALE_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_ACCEL_SCALE_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_ACCEL_SCALE_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_ACCEL_SCALE_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_ACCEL_SCALE_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_ACCEL_SCALE_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_ACCEL_SCALE_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_ACCEL_SCALE_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_ACCEL_SCALE_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_ACCEL_SCALE_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-accel-alignment1-1-to-hidden-accel-alignment3-3">
+<span id="hidden-accel-alignment3-3"></span><span id="hidden-accel-alignment3-2"></span><span id="hidden-accel-alignment3-1"></span><span id="hidden-accel-alignment2-3"></span><span id="hidden-accel-alignment2-2"></span><span id="hidden-accel-alignment2-1"></span><span id="hidden-accel-alignment1-3"></span><span id="hidden-accel-alignment1-2"></span><span id="hidden-accel-alignment1-1"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_ACCEL_ALIGNMENT1_1 to HIDDEN_ACCEL_ALIGNMENT3_3</span></a><a class="headerlink" href="#hidden-accel-alignment1-1-to-hidden-accel-alignment3-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-82-to-90-0x52-to-0x5a-0b01010010-to-0b01011010">
+<h4>Address: 82 to 90 |  0x52 to 0x5A  |  0b01010010 to 0b01011010<a class="headerlink" href="#address-82-to-90-0x52-to-0x5a-0b01010010-to-0b01011010" title="Permalink to this headline">¶</a></h4>
+<p>Cross-axis alignment matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} \texttt{HIDDEN_ACCEL_ALIGNMENT1_1} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT1_2} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT1_3} \\
+                \texttt{HIDDEN_ACCEL_ALIGNMENT2_1} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT2_2} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT2_3} \\
+                \texttt{HIDDEN_ACCEL_ALIGNMENT3_1} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT3_2} &amp;
+                \texttt{HIDDEN_ACCEL_ALIGNMENT3_3} \\
+\end{bmatrix}\end{split}\]</div>
+<table class="docutils align-default" id="id47">
+<caption><span class="caption-number">Table 144 </span><span class="caption-text"><strong>HIDDEN_ACCEL_ALIGNMENT1_1 to HIDDEN_ACCEL_ALIGNMENT3_3</strong></span><a class="headerlink" href="#id47" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT1_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT1_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT1_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT2_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT2_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT2_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT3_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT3_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_ACCEL_ALIGNMENT3_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-mag-bias-x-pow-0-to-hidden-c-mag-bias-z-pow-3">
+<span id="hidden-c-mag-bias-z-pow-3"></span><span id="hidden-c-mag-bias-z-pow-2"></span><span id="hidden-c-mag-bias-z-pow-1"></span><span id="hidden-c-mag-bias-z-pow-0"></span><span id="hidden-c-mag-bias-y-pow-3"></span><span id="hidden-c-mag-bias-y-pow-2"></span><span id="hidden-c-mag-bias-y-pow-1"></span><span id="hidden-c-mag-bias-y-pow-0"></span><span id="hidden-c-mag-bias-x-pow-3"></span><span id="hidden-c-mag-bias-x-pow-2"></span><span id="hidden-c-mag-bias-x-pow-1"></span><span id="hidden-c-mag-bias-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_MAG_BIAS_X_POW_0 to HIDDEN_C_MAG_BIAS_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-mag-bias-x-pow-0-to-hidden-c-mag-bias-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-91-to-102-0x5b-to-0x66-0b01011011-to-0b01100110">
+<h4>Address: 91 to 102 |  0x5B to 0x66  |  0b01011011 to 0b01100110<a class="headerlink" href="#address-91-to-102-0x5b-to-0x66-0b01011011-to-0b01100110" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(a[t]\)</span> accelerometer measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}a[t]' &amp;= a[t] \times P_{scale}(T) + P_{bias}(T), \; \\
+\text{where}\\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3 \\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id48">
+<caption><span class="caption-number">Table 145 </span><span class="caption-text"><strong>HIDDEN_C_MAG_BIAS_X_POW_0 to HIDDEN_C_MAG_BIAS_Z_POW_3</strong></span><a class="headerlink" href="#id48" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_MAG_BIAS_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_MAG_BIAS_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_MAG_BIAS_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_MAG_BIAS_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_MAG_BIAS_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_MAG_BIAS_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_MAG_BIAS_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_MAG_BIAS_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_0\)</span> HIDDEN_C_MAG_BIAS_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_1\)</span> HIDDEN_C_MAG_BIAS_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_2\)</span> HIDDEN_C_MAG_BIAS_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{bias}_3\)</span> HIDDEN_C_MAG_BIAS_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-c-mag-scale-x-pow-0-to-hidden-c-mag-scale-z-pow-3">
+<span id="hidden-c-mag-scale-z-pow-3"></span><span id="hidden-c-mag-scale-z-pow-2"></span><span id="hidden-c-mag-scale-z-pow-1"></span><span id="hidden-c-mag-scale-z-pow-0"></span><span id="hidden-c-mag-scale-y-pow-3"></span><span id="hidden-c-mag-scale-y-pow-2"></span><span id="hidden-c-mag-scale-y-pow-1"></span><span id="hidden-c-mag-scale-y-pow-0"></span><span id="hidden-c-mag-scale-x-pow-3"></span><span id="hidden-c-mag-scale-x-pow-2"></span><span id="hidden-c-mag-scale-x-pow-1"></span><span id="hidden-c-mag-scale-x-pow-0"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_C_MAG_SCALE_X_POW_0 to HIDDEN_C_MAG_SCALE_Z_POW_3</span></a><a class="headerlink" href="#hidden-c-mag-scale-x-pow-0-to-hidden-c-mag-scale-z-pow-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-103-to-114-0x67-to-0x72-0b01100111-to-0b01110010">
+<h4>Address: 103 to 114 |  0x67 to 0x72  |  0b01100111 to 0b01110010<a class="headerlink" href="#address-103-to-114-0x67-to-0x72-0b01100111-to-0b01110010" title="Permalink to this headline">¶</a></h4>
+<p>Given:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> temperature;</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time stamp;</p></li>
+<li><p><span class="math notranslate nohighlight">\(m[t]\)</span> magnetometer measurement at time stamp <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+<p>We compute temperature compensation values as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}m[t]' &amp;= (m[t] - P_{bias}(T)) \times P_{scale}(T), \; \\
+\text{where}\\
+P_{bias}(T) &amp;= C^{bias}_0 + C^{bias}_1 T + C^{bias}_2 T^2 + C^{bias}_3 T^3 \\
+P_{scale}(T) &amp;= C^{scale}_0 + C^{scale}_1 T + C^{scale}_2 T^2 + C^{scale}_3 T^3\end{split}\]</div>
+<table class="docutils align-default" id="id49">
+<caption><span class="caption-number">Table 146 </span><span class="caption-text"><strong>HIDDEN_C_MAG_SCALE_X_POW_0 to HIDDEN_C_MAG_SCALE_Z_POW_3</strong></span><a class="headerlink" href="#id49" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_MAG_SCALE_X_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_MAG_SCALE_X_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_MAG_SCALE_X_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_MAG_SCALE_X_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_MAG_SCALE_Y_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_MAG_SCALE_Y_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_MAG_SCALE_Y_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_MAG_SCALE_Y_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_0\)</span> HIDDEN_C_MAG_SCALE_Z_POW_0: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_1\)</span> HIDDEN_C_MAG_SCALE_Z_POW_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_2\)</span> HIDDEN_C_MAG_SCALE_Z_POW_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p><span class="math notranslate nohighlight">\(C^{scale}_3\)</span> HIDDEN_C_MAG_SCALE_Z_POW_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-mag-alignment1-1-to-hidden-mag-alignment3-3">
+<span id="hidden-mag-alignment3-3"></span><span id="hidden-mag-alignment3-2"></span><span id="hidden-mag-alignment3-1"></span><span id="hidden-mag-alignment2-3"></span><span id="hidden-mag-alignment2-2"></span><span id="hidden-mag-alignment2-1"></span><span id="hidden-mag-alignment1-3"></span><span id="hidden-mag-alignment1-2"></span><span id="hidden-mag-alignment1-1"></span><h3><a class="toc-backref" href="#table-of-contents"><span class="xref std std-ref">HIDDEN_MAG_ALIGNMENT1_1 to HIDDEN_MAG_ALIGNMENT3_3</span></a><a class="headerlink" href="#hidden-mag-alignment1-1-to-hidden-mag-alignment3-3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-115-to-123-0x73-to-0x7b-0b01110011-to-0b01111011">
+<h4>Address: 115 to 123 |  0x73 to 0x7B  |  0b01110011 to 0b01111011<a class="headerlink" href="#address-115-to-123-0x73-to-0x7b-0b01110011-to-0b01111011" title="Permalink to this headline">¶</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} \texttt{HIDDEN_MAG_ALIGNMENT1_1} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT1_2} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT1_3} \\
+                \texttt{HIDDEN_MAG_ALIGNMENT2_1} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT2_2} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT2_3} \\
+                \texttt{HIDDEN_MAG_ALIGNMENT3_1} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT3_2} &amp;
+                \texttt{HIDDEN_MAG_ALIGNMENT3_3} \\
+\end{bmatrix}\end{split}\]</div>
+<table class="docutils align-default" id="id50">
+<caption><span class="caption-number">Table 147 </span><span class="caption-text"><strong>HIDDEN_MAG_ALIGNMENT1_1 to HIDDEN_MAG_ALIGNMENT3_3</strong></span><a class="headerlink" href="#id50" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT1_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT1_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT1_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT2_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT2_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT2_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT3_1: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-even"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT3_2: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_ALIGNMENT3_3: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-mag-reference-x">
+<span id="id20"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-mag-reference-x"><span class="std std-ref">HIDDEN_MAG_REFERENCE_X</span></a></a><a class="headerlink" href="#hidden-mag-reference-x" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-124-0x7c-0b01111100">
+<h4>Address: 124  |  0x7C  |  0b01111100<a class="headerlink" href="#address-124-0x7c-0b01111100" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id51">
+<caption><span class="caption-number">Table 148 </span><span class="caption-text"><strong>HIDDEN_MAG_REFERENCE_X</strong></span><a class="headerlink" href="#id51" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_REFERENCE_X: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-mag-reference-y">
+<span id="id21"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-mag-reference-y"><span class="std std-ref">HIDDEN_MAG_REFERENCE_Y</span></a></a><a class="headerlink" href="#hidden-mag-reference-y" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-125-0x7d-0b01111101">
+<h4>Address: 125  |  0x7D  |  0b01111101<a class="headerlink" href="#address-125-0x7d-0b01111101" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id52">
+<caption><span class="caption-number">Table 149 </span><span class="caption-text"><strong>HIDDEN_MAG_REFERENCE_Y</strong></span><a class="headerlink" href="#id52" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_REFERENCE_Y: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="hidden-mag-reference-z">
+<span id="id22"></span><h3><a class="toc-backref" href="#table-of-contents"><a class="reference internal" href="#hidden-mag-reference-z"><span class="std std-ref">HIDDEN_MAG_REFERENCE_Z</span></a></a><a class="headerlink" href="#hidden-mag-reference-z" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="address-126-0x7e-0b01111110">
+<h4>Address: 126  |  0x7E  |  0b01111110<a class="headerlink" href="#address-126-0x7e-0b01111110" title="Permalink to this headline">¶</a></h4>
+<table class="docutils align-default" id="id53">
+<caption><span class="caption-number">Table 150 </span><span class="caption-text"><strong>HIDDEN_MAG_REFERENCE_Z</strong></span><a class="headerlink" href="#id53" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="4"><p><strong>Byte 3</strong></p></td>
+<td colspan="4"><p><strong>Byte 2</strong></p></td>
+<td colspan="4"><p><strong>Byte 1</strong></p></td>
+<td colspan="4"><p><strong>Byte 0</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>30</p></td>
+<td><p>…</p></td>
+<td><p>24</p></td>
+<td><p>23</p></td>
+<td><p>22</p></td>
+<td><p>…</p></td>
+<td><p>16</p></td>
+<td><p>15</p></td>
+<td><p>14</p></td>
+<td><p>…</p></td>
+<td><p>8</p></td>
+<td><p>7</p></td>
+<td><p>6</p></td>
+<td><p>…</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td colspan="16"><p>HIDDEN_MAG_REFERENCE_Z: 32-bit IEEE Floating Point Value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="binary_packet_v2.html" class="btn btn-neutral float-right" title="Binary packet structure V2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="register_map_current.html" class="btn btn-neutral float-left" title="Register Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Redshift Labs Pty Ltd.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

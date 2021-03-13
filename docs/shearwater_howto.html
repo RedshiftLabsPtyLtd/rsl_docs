@@ -1,0 +1,618 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Shearwater HowTo &mdash; redshiftlabs_serial  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Hidden registers V2" href="hidden_registers_v2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> redshiftlabs_serial
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="binary_packet.html">Binary packet structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_current.html">Register Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidden_registers.html">Hidden registers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binary_packet_v2.html">Binary packet structure V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register_map_v2.html">Register map V2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidden_registers_v2.html">Hidden registers V2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shearwater HowTo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started-plan">0. Getting started plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-shearwater-firmware">1. Updating shearwater firmware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#download-the-stm32cubeprogrammer">1.1 Download the STM32CubeProgrammer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-the-stm32cubeprogrammer">1.2 Install the STM32CubeProgrammer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-the-shearwater-firmware">1.3 Updating the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> firmware</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#putting-shearwater-to-the-bootloader-mode">1.3.1 Putting <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> to the bootloader mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-shearwater-firmware-using-cli">1.3.2 Updating shearwater firmware using CLI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-shearwater-firmware-using-gui">1.3.3 Updating shearwater firmware using GUI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#check-serial-communication-with-minicom-python">2. Check serial communication with minicom / python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reading-sensor-byte-stream-with-minicom">2.1 Reading sensor byte stream with minicom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-sensor-byte-stream-with-python">2.2 Reading sensor byte stream with python</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-miniconda-environment">2.2.1 Creating miniconda environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#activating-the-shearwater-environment">2.2.2 Activating the shearwater environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installing-the-pyserial-package">2.2.3 Installing the <code class="docutils literal notranslate"><span class="pre">pyserial</span></code> package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reading-bytestream-data-with-python">2.2.4 Reading bytestream data with python</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-shearwater-driver-with-examples">3. Running <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> driver with examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-packages-to-the-python-path">3.1 Adding packages to the python path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-examples-with-the-port-name-argument">3.2 Running examples with the <code class="docutils literal notranslate"><span class="pre">port_name</span></code> argument</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-examples-with-the-device-argument">3.3 Running examples with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">redshiftlabs_serial</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Shearwater HowTo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="shearwater-howto">
+<h1><a class="toc-backref" href="#table-of-contents">Shearwater HowTo</a><a class="headerlink" href="#shearwater-howto" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#shearwater-howto" id="id4">Shearwater HowTo</a></p>
+<ul>
+<li><p><a class="reference internal" href="#getting-started-plan" id="id5">0. Getting started plan</a></p></li>
+<li><p><a class="reference internal" href="#updating-shearwater-firmware" id="id6">1. Updating shearwater firmware</a></p>
+<ul>
+<li><p><a class="reference internal" href="#download-the-stm32cubeprogrammer" id="id7">1.1 Download the STM32CubeProgrammer</a></p></li>
+<li><p><a class="reference internal" href="#install-the-stm32cubeprogrammer" id="id8">1.2 Install the STM32CubeProgrammer</a></p></li>
+<li><p><a class="reference internal" href="#updating-the-shearwater-firmware" id="id9">1.3 Updating the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> firmware</a></p>
+<ul>
+<li><p><a class="reference internal" href="#putting-shearwater-to-the-bootloader-mode" id="id10">1.3.1 Putting <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> to the bootloader mode</a></p></li>
+<li><p><a class="reference internal" href="#updating-shearwater-firmware-using-cli" id="id11">1.3.2 Updating shearwater firmware using CLI</a></p>
+<ul>
+<li><p><a class="reference internal" href="#query-available-interfaces" id="id12">1.3.2.1 Query available interfaces</a></p></li>
+<li><p><a class="reference internal" href="#connect-to-port" id="id13">1.3.2.2 Connect to port</a></p></li>
+<li><p><a class="reference internal" href="#flash-the-firmware-file" id="id14">1.3.2.3 Flash the firmware file</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#updating-shearwater-firmware-using-gui" id="id15">1.3.3 Updating shearwater firmware using GUI</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#check-serial-communication-with-minicom-python" id="id16">2. Check serial communication with minicom / python</a></p>
+<ul>
+<li><p><a class="reference internal" href="#reading-sensor-byte-stream-with-minicom" id="id17">2.1 Reading sensor byte stream with minicom</a></p></li>
+<li><p><a class="reference internal" href="#reading-sensor-byte-stream-with-python" id="id18">2.2 Reading sensor byte stream with python</a></p>
+<ul>
+<li><p><a class="reference internal" href="#creating-miniconda-environment" id="id19">2.2.1 Creating miniconda environment</a></p></li>
+<li><p><a class="reference internal" href="#activating-the-shearwater-environment" id="id20">2.2.2 Activating the shearwater environment</a></p></li>
+<li><p><a class="reference internal" href="#installing-the-pyserial-package" id="id21">2.2.3 Installing the <code class="docutils literal notranslate"><span class="pre">pyserial</span></code> package</a></p></li>
+<li><p><a class="reference internal" href="#reading-bytestream-data-with-python" id="id22">2.2.4 Reading bytestream data with python</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-shearwater-driver-with-examples" id="id23">3. Running <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> driver with examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#adding-packages-to-the-python-path" id="id24">3.1 Adding packages to the python path</a></p></li>
+<li><p><a class="reference internal" href="#running-examples-with-the-port-name-argument" id="id25">3.2 Running examples with the <code class="docutils literal notranslate"><span class="pre">port_name</span></code> argument</a></p></li>
+<li><p><a class="reference internal" href="#running-examples-with-the-device-argument" id="id26">3.3 Running examples with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>In this document we describe a step-by-step guide to get started with the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board.
+For this guide we assume that a user is on the <code class="docutils literal notranslate"><span class="pre">Linux</span></code> (e.g. Ubuntu, Suse, etc.) distribution
+and has access to the available command-line utilities. Administrative access is a plus and might
+be required when access to the serial is restricted on the system.</p>
+<p>In order to get started one needs:</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board;</p></li>
+<li><p>a Linux PC with Python <cite>&gt;=3.6</cite> (preferably 3.7+) installed;</p></li>
+<li><p><a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> software from ST for the firmware update;</p></li>
+<li><p>firmware file (e.g. <code class="docutils literal notranslate"><span class="pre">firmware_shearwater_v0.5.133.hex</span></code> or some newer version);</p></li>
+<li><p>an archive with <code class="docutils literal notranslate"><span class="pre">rsl_charts</span></code> GUI tool (e.g. <code class="docutils literal notranslate"><span class="pre">rsl_charts_v0-2-12.tar.gz</span></code> or some other version) or
+access to the <code class="docutils literal notranslate"><span class="pre">rsl_charts</span></code> repository. Do not worry if you do not have access to the repo, after polishing we will
+make it public. The <code class="docutils literal notranslate"><span class="pre">*.tar.gz</span></code> archives are created by our CI pipelines, and are tested before packaging.
+Of course, tests can never proof the absence of bugs, but only their presence, but this is a good initial sign.</p></li>
+</ul>
+<div class="section" id="getting-started-plan">
+<h2><a class="toc-backref" href="#table-of-contents">0. Getting started plan</a><a class="headerlink" href="#getting-started-plan" title="Permalink to this headline">¶</a></h2>
+<p>In order to get started we are going to follow the steps below:</p>
+<ol class="arabic simple">
+<li><p>Update the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board to the newest firmware version using the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a>;</p></li>
+<li><p>Check the serial connection between the board and PC using minicom and/or python;</p></li>
+<li><p>Get <code class="docutils literal notranslate"><span class="pre">um7py</span></code> driver running for the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> with the provided examples;</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">rsl_charts</span></code> GUI application for visualizing and recording sensor data.</p></li>
+</ol>
+</div>
+<div class="section" id="updating-shearwater-firmware">
+<h2><a class="toc-backref" href="#table-of-contents">1. Updating shearwater firmware</a><a class="headerlink" href="#updating-shearwater-firmware" title="Permalink to this headline">¶</a></h2>
+<p>The shearwater uses the STM32 <code class="docutils literal notranslate"><span class="pre">MCU</span></code>; we use the official tool from ST to flash the firmware to the board
+(and update the board’s firmware to the latest version).</p>
+<div class="section" id="download-the-stm32cubeprogrammer">
+<h3>1.1 Download the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a><a class="headerlink" href="#download-the-stm32cubeprogrammer" title="Permalink to this headline">¶</a></h3>
+<p>Download the tool from the ST website using the following link: <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a>.
+It might happen, that ST policy require to login to their website (or create an account first)
+in order access the download link.</p>
+</div>
+<div class="section" id="install-the-stm32cubeprogrammer">
+<h3>1.2 Install the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a><a class="headerlink" href="#install-the-stm32cubeprogrammer" title="Permalink to this headline">¶</a></h3>
+<p>As of 2.03.2021, the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> tool is version 2.6.0 has been tested.
+The tool will be downloaded as a <cite>*.zip</cite> archive, which will contain installation files after extraction.</p>
+<p>After downloading the tool, install the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> on the Linux (or Windows) machine.
+For the installation, navigate to the folder and run the <code class="docutils literal notranslate"><span class="pre">SetupSTM32CubeProgrammer-{version}.linux</span></code> executable.</p>
+<p>During the installation process the tool asks for the installation directory, where it unpacks the binaries
+and libraries. We will refer to this directory as <code class="docutils literal notranslate"><span class="pre">STM32CubeProgrammer_ROOT</span></code>.
+To follow along the rest of this section, navigate to the <code class="docutils literal notranslate"><span class="pre">STM32CubeProgrammer_ROOT</span></code> folder, e.g. in your terminal:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /path/to/installed/stm32cubeprogrammer
+</pre></div>
+</div>
+<p>Note for Ubuntu users: the tool itself is java-based,
+and it requires oracle jdk (does not run with openjdk),
+so I needed also to install the jdk from here:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>https://www.oracle.com/java/technologies/javase-jdk8-downloads.html
+</pre></div>
+</div>
+</div>
+<div class="section" id="updating-the-shearwater-firmware">
+<h3><a class="toc-backref" href="#table-of-contents">1.3 Updating the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> firmware</a><a class="headerlink" href="#updating-the-shearwater-firmware" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> is available both as a GUI application and a command-line utility.
+In the following we cover both ways of using the tool for updating the firmware.</p>
+<div class="section" id="putting-shearwater-to-the-bootloader-mode">
+<span id="id1"></span><h4><a class="toc-backref" href="#table-of-contents">1.3.1 Putting <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> to the bootloader mode</a><a class="headerlink" href="#putting-shearwater-to-the-bootloader-mode" title="Permalink to this headline">¶</a></h4>
+<p><strong>Important</strong>: before updating the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> we need to put it in a <cite>boot mode</cite>.
+In order to put the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> to the boot mode, do the following:</p>
+<ol class="arabic simple">
+<li><p>Disconnect the board from power supply;</p></li>
+<li><p>Press and hold the blue <strong>“BOOT MODE”</strong> button on the board;</p></li>
+<li><p>While the button is pressed, connect the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board to PC
+(i.e. the board shall be powered when the button is pressed down).</p></li>
+</ol>
+<p>If done correctly, <strong>no</strong> LEDs should light on the board. If so, congratulations, you put the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>
+board in the boot mode! Keep up the good work!</p>
+<p>If after this procedure the <cite>green</cite> LED is still <strong>on</strong> when the board is powered, then repeat the procedure above.
+The key point here is to keep the button pressed when connecting the board to power supply.</p>
+</div>
+<div class="section" id="updating-shearwater-firmware-using-cli">
+<h4><a class="toc-backref" href="#table-of-contents">1.3.2 Updating shearwater firmware using CLI</a><a class="headerlink" href="#updating-shearwater-firmware-using-cli" title="Permalink to this headline">¶</a></h4>
+<p>In this section we cover updating the shearwater firmware using the CLI version of the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> tool.
+From your <code class="docutils literal notranslate"><span class="pre">STM32CubeProgrammer_ROOT</span></code> directory navigate to the folder with <code class="docutils literal notranslate"><span class="pre">STM32_Programmer_CLI</span></code> executable:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> bin
+</pre></div>
+</div>
+<div class="section" id="query-available-interfaces">
+<h5><a class="toc-backref" href="#table-of-contents">1.3.2.1 Query available interfaces</a><a class="headerlink" href="#query-available-interfaces" title="Permalink to this headline">¶</a></h5>
+<p>We can list available interfaces for the tool with the command (note, this step is <strong>optional</strong>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./STM32_Programmer_CLI --list
+</pre></div>
+</div>
+<p>We need to identify as which serial port (or USB over serial) the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> is associated with on the PC.
+For this one can execute the <code class="docutils literal notranslate"><span class="pre">--list</span></code> command twice, when the board is disconnected and when the board is connected,
+and identify the port of the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>. <strong>Note</strong>, when using the USB2Serial converter (which uses the FTDI chip),
+the port which has the FTDI as manufacturer in its description is high probably the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> port.</p>
+<p>Assuming we found that the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board is connected to the <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code> port (the port name might be
+different in your case!), we proceed further.</p>
+</div>
+<div class="section" id="connect-to-port">
+<h5><a class="toc-backref" href="#table-of-contents">1.3.2.2 Connect to port</a><a class="headerlink" href="#connect-to-port" title="Permalink to this headline">¶</a></h5>
+<p>Using the command below we connect to the previously identified port (note, this step is <strong>optional</strong>):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./STM32_Programmer_CLI --connect <span class="nv">port</span><span class="o">=</span>/dev/ttyUSB0
+</pre></div>
+</div>
+<p>If the connection is successful, the tool reports <code class="docutils literal notranslate"><span class="pre">Activating</span> <span class="pre">device:</span> <span class="pre">OK</span></code> as well as device name and its properties.</p>
+</div>
+<div class="section" id="flash-the-firmware-file">
+<h5><a class="toc-backref" href="#table-of-contents">1.3.2.3 Flash the firmware file</a><a class="headerlink" href="#flash-the-firmware-file" title="Permalink to this headline">¶</a></h5>
+<p>We flash the firmware file to the board using the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./STM32_Programmer_CLI --connect <span class="nv">port</span><span class="o">=</span>/dev/ttyUSB0 --download /path/to/your/firmware_shearwater_v0.5.133.hex
+</pre></div>
+</div>
+<p><strong>Important</strong>: replace the <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code> with your port, and the  <code class="docutils literal notranslate"><span class="pre">/path/to/your/firmware_shearwater_v0.5.133.hex</span></code>
+with your path to the firmware file (relative or absolute path both OK).</p>
+<p>When done correctly, the tool outputs status text and a progress bar, and reports a status after the update.
+If you see as output “File download complete”, then congrats – you updated the firmware!
+Then unplug the power of the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>, and connect it to power, if you see at startup the red, 2 yellow, and green
+LED is <strong>on</strong> for a short time, and then the <strong>green</strong> LED <strong>on</strong>, congrats again – the firmware is actually updated!</p>
+<p><strong>Important</strong>: If you encountered a problem, do not hesitate to contact us with the section reference when failed,
+and short description of your problem.
+We are keen to improve our documentation and make the getting started as flawless as possible.
+Please help us make this process as smooth as possible. Your input is highly appreciated!</p>
+</div>
+</div>
+<div class="section" id="updating-shearwater-firmware-using-gui">
+<h4><a class="toc-backref" href="#table-of-contents">1.3.3 Updating shearwater firmware using GUI</a><a class="headerlink" href="#updating-shearwater-firmware-using-gui" title="Permalink to this headline">¶</a></h4>
+<p>In this section we cover updating the shearwater firmware using the GUI version of the <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer</a> tool.</p>
+<p>Before proceeding further, followed the procedure in <a class="reference internal" href="#id1">1.3.1</a> and put the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board in the “BOOT MODE”.</p>
+<p>From your <code class="docutils literal notranslate"><span class="pre">STM32CubeProgrammer_ROOT</span></code> directory launch the GUI executable <code class="docutils literal notranslate"><span class="pre">STM32CubeProgrammer</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./bin/STM32CubeProgrammer
+</pre></div>
+</div>
+<p>The following GUI window opens:</p>
+<div class="align-center figure">
+<a class="reference external image-reference" href="_images/st_gui_1.png"><img alt="GUI window" src="_images/st_gui_1.png" /></a>
+</div>
+<p>Select the port where the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board is connected and press
+the green “Connect” button on the right side of the GUI application:</p>
+<div class="align-center figure">
+<a class="reference external image-reference" href="_images/st_gui_2.png"><img alt="Board connected" src="_images/st_gui_2.png" /></a>
+</div>
+<p>When successfully connected, click “Open File”, and select the provided firmware file:</p>
+<div class="figure align-center">
+<a class="reference external image-reference" href="_images/st_gui_3.png"><img alt="_images/st_gui_3.png" src="_images/st_gui_3.png" /></a>
+</div>
+<p>When the firmware is loaded in the GUI, press the blue “Download” button</p>
+<a class="reference external image-reference" href="_images/st_gui_4.png"><img alt="_images/st_gui_4.png" class="align-center" src="_images/st_gui_4.png" /></a>
+<p>When download is complete, the following pop-up window is shown:</p>
+<div class="align-center figure">
+<a class="reference external image-reference" href="_images/st_gui_5.png"><img alt="Flashing done" src="_images/st_gui_5.png" /></a>
+</div>
+<p>If you see a pop-up window “File download complete” (as on the figure above), then congrats – you updated the firmware!
+Then unplug the power of the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>, and connect it to power, if you see at startup the red, 2 yellow, and green
+LED is <strong>on</strong> for a short time, and then the <strong>green</strong> LED <strong>on</strong>, congrats again – the firmware is actually updated!</p>
+<p><strong>Important</strong>: If you encountered a problem, do not hesitate to contact us with the section reference when failed,
+and short description of your problem.
+We are keen to improve our documentation and make the getting started as flawless as possible.
+Please help us make this process as smooth as possible. Your input is highly appreciated!</p>
+<p>We now proceed to the second step of our tutorial, checking serial communication with <code class="docutils literal notranslate"><span class="pre">minicom</span></code>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="check-serial-communication-with-minicom-python">
+<h2><a class="toc-backref" href="#table-of-contents">2. Check serial communication with minicom / python</a><a class="headerlink" href="#check-serial-communication-with-minicom-python" title="Permalink to this headline">¶</a></h2>
+<p>When the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board runs normally, it sends broadcast messages over serial.
+In this part of the tutorial, we use a utility <code class="docutils literal notranslate"><span class="pre">minicom</span></code> to read from the serial port, or Python’s <code class="docutils literal notranslate"><span class="pre">pyserial</span></code>
+module in order to ensure the bytestream is coming and we are able to receive the data from the board.
+This means one can either double-check bytestream with <code class="docutils literal notranslate"><span class="pre">minicom</span></code>, or use <code class="docutils literal notranslate"><span class="pre">pyserial</span></code>.
+After updating the firmware file, the default baud rate is <code class="docutils literal notranslate"><span class="pre">115200</span></code>.</p>
+<p>This part of the tutorial is optional, although it makes it easier to identify and fix possible HW / SW problems.</p>
+<p>In order to be able to read from serial port without the admin privileges, a user needs to be part of the <code class="docutils literal notranslate"><span class="pre">dialout</span></code> group.</p>
+<div class="section" id="reading-sensor-byte-stream-with-minicom">
+<span id="id2"></span><h3><a class="toc-backref" href="#table-of-contents">2.1 Reading sensor byte stream with minicom</a><a class="headerlink" href="#reading-sensor-byte-stream-with-minicom" title="Permalink to this headline">¶</a></h3>
+<p>Using minicom one can read from a port to the file using the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>minicom -D /dev/ttyUSB0 -b <span class="m">115200</span> -C minicom.log
+</pre></div>
+</div>
+<p>Run the command above and observe byte stream of binary data displayed on the display. In order to quit the minicom utility,
+press <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">A</span></code> and then <code class="docutils literal notranslate"><span class="pre">Q</span></code>. Check the created <code class="docutils literal notranslate"><span class="pre">minicom.log</span></code> for content. If the file is non-empty and connect the
+binary data (in particular if you can spot the <code class="docutils literal notranslate"><span class="pre">snp</span></code> (<code class="docutils literal notranslate"><span class="pre">snp</span></code> stands for the Start New Packet)
+strings in the binary stream here and there), then you can successfully read the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> broadcast messages, congrats!
+This means your hardware and software is setup correctly, and as a next step we will use the <code class="docutils literal notranslate"><span class="pre">um7py</span></code> python driver
+to communicate with the board, change board configuration, and decode the sensor broadcast messages, like the ones
+recorded in the log file.</p>
+</div>
+<div class="section" id="reading-sensor-byte-stream-with-python">
+<h3><a class="toc-backref" href="#table-of-contents">2.2 Reading sensor byte stream with python</a><a class="headerlink" href="#reading-sensor-byte-stream-with-python" title="Permalink to this headline">¶</a></h3>
+<p>Alternative to using the <code class="docutils literal notranslate"><span class="pre">minicom</span></code> utility from section <a class="reference internal" href="#id2">2.1</a>, we can use the python, and in particular the
+<code class="docutils literal notranslate"><span class="pre">pyserial</span></code> module to read out low-level byte stream from the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board.</p>
+<p>For the rest of this section I will use <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a> for managing python environments.
+Miniconda can be installed freely from the web under the following link: <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>.
+If you do not like / do not want to use <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>, you can achieve the same results of installing
+a custom python version and python dependencies using python virtual environment <code class="docutils literal notranslate"><span class="pre">venv</span></code>.
+We will not cover this in the tutorial.</p>
+<div class="section" id="creating-miniconda-environment">
+<h4><a class="toc-backref" href="#table-of-contents">2.2.1 Creating miniconda environment</a><a class="headerlink" href="#creating-miniconda-environment" title="Permalink to this headline">¶</a></h4>
+<p>First, we create a new conda environment called <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> with python version 3.8:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda create -n shearwater <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8
+</pre></div>
+</div>
+</div>
+<div class="section" id="activating-the-shearwater-environment">
+<h4><a class="toc-backref" href="#table-of-contents">2.2.2 Activating the shearwater environment</a><a class="headerlink" href="#activating-the-shearwater-environment" title="Permalink to this headline">¶</a></h4>
+<p>We now can activate the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> environment, in order to use <code class="docutils literal notranslate"><span class="pre">python</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code> which we have installed:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>conda activate shearwater
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-the-pyserial-package">
+<h4><a class="toc-backref" href="#table-of-contents">2.2.3 Installing the <code class="docutils literal notranslate"><span class="pre">pyserial</span></code> package</a><a class="headerlink" href="#installing-the-pyserial-package" title="Permalink to this headline">¶</a></h4>
+<p>We now need to install the <code class="docutils literal notranslate"><span class="pre">pyserial</span></code> package, in order to communicate over the serial port with python:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install pyserial
+</pre></div>
+</div>
+</div>
+<div class="section" id="reading-bytestream-data-with-python">
+<h4><a class="toc-backref" href="#table-of-contents">2.2.4 Reading bytestream data with python</a><a class="headerlink" href="#reading-bytestream-data-with-python" title="Permalink to this headline">¶</a></h4>
+<p>We now have our python interpreter ready to read the byte stream which the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board is broadcasting.
+If the shearwater is connected to the <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code> port, we then can read the byte stream from python as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">serial</span>
+<span class="n">port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="s1">&#39;/dev/ttyUSB0&#39;</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="mi">115200</span><span class="p">)</span>  <span class="c1"># create serial port object</span>
+<span class="n">port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Read 1 kByte of sensor data, binary data should appear in console</span>
+<span class="sa">b</span><span class="s1">&#39;snp&#39;</span> <span class="ow">in</span> <span class="n">port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># -&gt; True, &quot;snp&quot; header is present in the binary data</span>
+</pre></div>
+</div>
+<p>Launch the python interpreter, and paste the above snippet.
+If you see a 1 kByte of sensor data stream, and the “True” as a value of the last expression: success! You are
+able to read the byte stream from the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board using python.
+This means your hardware and software is setup correctly, and as a next step we will use the <code class="docutils literal notranslate"><span class="pre">um7py</span></code> python driver
+to communicate with the board, change board configuration, and decode the sensor broadcast messages, which we were
+able to see in the console.</p>
+<p>If you did not manage to achive this, there might be a handful of reason why something failed. Hardware and Software
+needs to be configured properly. If you do not see the byte stream, check if you are a member of the <code class="docutils literal notranslate"><span class="pre">dialout</span></code> group,
+or if you have rights to read/write serial port in general. Check that you selected the port correctly. Check that the
+board is powered and the green LED on the board is <strong>on</strong>.
+If you still have a problem, do not hesitate to contact us, describe us your problem and what has gone wrong.
+We will be glad to extend the documentation and make the getting started process as smooth as possible.</p>
+</div>
+</div>
+</div>
+<div class="section" id="running-shearwater-driver-with-examples">
+<h2><a class="toc-backref" href="#table-of-contents">3. Running <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> driver with examples</a><a class="headerlink" href="#running-shearwater-driver-with-examples" title="Permalink to this headline">¶</a></h2>
+<p>In this section we use the <code class="docutils literal notranslate"><span class="pre">um7py</span></code> python driver to read the broadcast messages, board’s data and configuration
+registers, and send commands to the board. The <code class="docutils literal notranslate"><span class="pre">um7py</span></code> python driver is included in the
+<code class="docutils literal notranslate"><span class="pre">rsl_charts_v{version}.tar.gz</span></code> archive.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">rsl_charts</span></code> GUI application has the following high-level structure:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rsl_data_acquisition</span></code> contains code to handle plotting buffers;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rsl_qt</span></code> contains code for creating plotting windows;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">um7py</span></code> contains python driver for communication with <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>;</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">examples</span></code> is a set of examples to illustrate the functionality of the python driver;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rsl_xml_svd</span></code> contains XML description of the register map for the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">um7py</span></code> contains the code to communicate with the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code>;</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>From the above structure the <code class="docutils literal notranslate"><span class="pre">rsl_charts/um7py</span></code> directory is of interest in this part of the tutorial.
+We refer to the  <code class="docutils literal notranslate"><span class="pre">rsl_charts/um7py</span></code> directory as <code class="docutils literal notranslate"><span class="pre">UM7_ROOT</span></code>.</p>
+<div class="section" id="adding-packages-to-the-python-path">
+<span id="id3"></span><h3><a class="toc-backref" href="#table-of-contents">3.1 Adding packages to the python path</a><a class="headerlink" href="#adding-packages-to-the-python-path" title="Permalink to this headline">¶</a></h3>
+<p>As we have seen in the repo description above, the <code class="docutils literal notranslate"><span class="pre">rsl_charts</span></code> and <code class="docutils literal notranslate"><span class="pre">um7py</span></code> packages have hierarchical structure,
+these contain and use other packages defined below in the hierarchy.
+We need to communicate paths of these packages to python, s.t. it is able to correctly resolve the imports.</p>
+<p>First, navigate to the <code class="docutils literal notranslate"><span class="pre">UM7_ROOT</span></code> folder and execute the following command in the terminal:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>:<span class="sb">`</span>realpath rsl_xml_svd<span class="sb">`</span>:<span class="sb">`</span>realpath um7py<span class="sb">`</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-examples-with-the-port-name-argument">
+<h3><a class="toc-backref" href="#table-of-contents">3.2 Running examples with the <code class="docutils literal notranslate"><span class="pre">port_name</span></code> argument</a><a class="headerlink" href="#running-examples-with-the-port-name-argument" title="Permalink to this headline">¶</a></h3>
+<p>We now navigate to the <code class="docutils literal notranslate"><span class="pre">UM7_ROOT/examples</span></code> directory and run some of the available examples.
+The provided examples use the concept of the <em>device file</em>, which is a file specifying parameters of the
+USB descriptors, and the python driver searches for device which matches the parameters from the file.
+This eliminates the need to change the code when the sensor appears under different port, when the board
+was re-plugged, since during the connection procedure we are searching for device with specified properties.
+We will take a look how to create such a file later in the guide.
+For now, in order to get started as quick as possible, we use the serial port (e.g. <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code>) directly.</p>
+<p>As the first, we modify and run the example <code class="docutils literal notranslate"><span class="pre">example_shearwater_dregs.py</span></code>.
+This example will read the sensor data registers, one-by-one.
+Before running the example, we need to modify the source code of the example file first.
+Open the file in the text editor, and replace the line (line 24):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shearwater</span> <span class="o">=</span> <span class="n">ShearWaterSerial</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with the following line (use your serial port):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">shearwater</span> <span class="o">=</span> <span class="n">ShearWaterSerial</span><span class="p">(</span><span class="n">port_name</span><span class="o">=</span><span class="s1">&#39;/dev/ttyUSB0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now run the example with python:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python example_shearwater_dregs.py
+</pre></div>
+</div>
+<p>If successful, you see console output of reading <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> data registers and their decoded values.
+Congratulations, you are able to successfully read and decode the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> register values!</p>
+<p>With the method described above, experiment with other provided examples: always change the line of creating the
+<code class="docutils literal notranslate"><span class="pre">ShearWaterSerial(device=device_file)</span></code> object to use the <code class="docutils literal notranslate"><span class="pre">ShearWaterSerial(port_name='/dev/ttyUSB0')</span></code> first,
+where the <code class="docutils literal notranslate"><span class="pre">port_name</span></code> is the port where your <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board is connected to.</p>
+<p>If you encounter an error, please let us know.</p>
+</div>
+<div class="section" id="running-examples-with-the-device-argument">
+<h3><a class="toc-backref" href="#table-of-contents">3.3 Running examples with the <code class="docutils literal notranslate"><span class="pre">device</span></code> argument</a><a class="headerlink" href="#running-examples-with-the-device-argument" title="Permalink to this headline">¶</a></h3>
+<p>In the previous section, we run the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> examples using the <code class="docutils literal notranslate"><span class="pre">port_name</span></code> argument, and connecting
+to the serial port directly. This has a following limitation: whenever you re-plug / reboot your PC, it might
+happen that the serial port name, to which the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> is connected is changed.
+E.g. if you use <cite>USB2Serial</cite> FTDI converter, it might happen that after re-plug the port name changes to the
+<code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB1</span></code>, and then when PC is re-booted, it changes back to <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code>. This means one needs to
+identify first to which port the board is connected, and then change the source code each time.</p>
+<p>When using the FTDI converter, we can avoid this problem: we create a so-called <cite>device</cite> file, where we store the
+parameters of the FTDI USB IDs, and then search for port which has the matching IDs.
+In this part of the tutorial we will create the device file, and use it as argument in the examples.</p>
+<p>In order to create the device file, disconnect all the devices from the serial port, except the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board.
+The <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board shall be connected.</p>
+<p>Before creating the <cite>device</cite> file, we need to make sure that the packages are included in the python path.
+This is described in the section <a class="reference internal" href="#id3">3.1</a> of this tutorial.
+When packages are added to the python path, we navigate to the <code class="docutils literal notranslate"><span class="pre">$UM7_ROOT/um7py</span></code> directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> rsl_charts/um7py/um7py
+</pre></div>
+</div>
+<p>We use the file <code class="docutils literal notranslate"><span class="pre">um7_autodetect.py</span></code> in this directory.</p>
+<p>On a Linux system we need to install the <code class="docutils literal notranslate"><span class="pre">pyudev</span></code> package:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python -m pip install pyudev
+</pre></div>
+</div>
+<p>First, run the help on the <code class="docutils literal notranslate"><span class="pre">um7_autodetect.py</span></code>, a useful description of the utility is printed to the console:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./um7_autodetect.py --help
+</pre></div>
+</div>
+<p>When the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board is connected to the PC via the USB2Serial converter, we can generate the <code class="docutils literal notranslate"><span class="pre">device</span></code>
+file using the autodetect file:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./um7_autodetect.py --help
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">um7_[serial].json</span></code> is now generated in the current directory.
+We can use this file to connect to the <code class="docutils literal notranslate"><span class="pre">shearwater</span></code> board instead of specifying the <code class="docutils literal notranslate"><span class="pre">port_name</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="hidden_registers_v2.html" class="btn btn-neutral float-left" title="Hidden registers V2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Redshift Labs Pty Ltd.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

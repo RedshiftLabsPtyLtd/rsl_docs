@@ -1,0 +1,1056 @@
+Binary packet structure
+=======================
+
+.. contents:: Table of Contents
+    :depth: 3
+    :backlinks: top
+
+Data transmitted and received by the UM7 is
+formatted into packets containing:
+
+1. The three character start sequence
+``s`` ``n`` ``p`` to indicate the start
+of a new packet (i.e. start new packet);
+
+2. A **packet type** (**PT**) byte describing the
+function and length of the packet;
+
+3. An address byte indicating the
+address of the register or command;
+
+4. A sequence of data bytes,
+the length of which is specified in the **PT** byte;
+
+5. A two-byte checksum
+for error-detection.
+
+
+.. table:: UART serial packet structure
+
+    +-------+-------+-------+---------+---------+---------------------------------------------------+-----------------------+-----------------------+
+    | ``s`` | ``n`` | ``p`` | **PT**  | address | D\ :sub:`0` \, D\ :sub:`1` \, ..., D\ :sub:`N-1`\ | Checksum\ :sub:`1` \  | Checksum\ :sub:`0` \  |
+    +-------+-------+-------+---------+---------+---------------------------------------------------+-----------------------+-----------------------+
+    |  packet start         | type    | address | data bytes                                        |  Checksum                                     |
+    +-----------------------+---------+---------+---------------------------------------------------+-----------------------------------------------+
+
+All binary packets sent and received by the UM7
+must conform to the format given above.
+
+The PT byte specifies whether the packet is a read or a write operation,
+whether it is a batch operation,
+and the length of the batch operation (when applicable).
+The PT byte is also used by the UM7 to respond to commands.
+The specific meaning of each bit in the PT byte is given below.
+
+.. table:: Packet Type (PT) byte
+    
+    +--------------+----------+----------+------+-----+-----+-----+--------+----+
+    | **bit**:     | 7        | 6        | 5    | 4   | 3   | 2   | 1      | 0  |
+    +--------------+----------+----------+------+-----+-----+-----+--------+----+
+    | **meaning**: | Has Data | Is Batch | BL3  | BL2 | BL1 | BL0 | hidden | CF |
+    +--------------+----------+----------+------+-----+-----+-----+--------+----+
+
+
+.. table:: Packet Type (PT) Bits Descriptions
+
+    +--------+--------------------------------------------------------------+
+    | Bit(s) | Description                                                  |
+    +========+==============================================================+
+    | 7      |   Has Data: If the packet contains data, this bit is set (1).|
+    |        |   If not, this bit is cleared (0).                           |
+    +--------+--------------------------------------------------------------+
+    | 6      | Is Batch: If the packet is a batch operation,                |
+    |        | this bit is set (1).                                         |
+    |        | If not, this bit is cleared (0).                             |
+    +--------+--------------------------------------------------------------+
+    | 5:2    |  Batch Length (**BL**):                                      |
+    |        |  Four bits specifying the length of the batch operation.     |
+    |        |  Unused if bit 7 is cleared.                                 |
+    |        |  The maximum batch length is therefore :math:`2^4 = 16`      |
+    +--------+--------------------------------------------------------------+
+    | 1      | Hidden: If set, then the packet address specified in the     |
+    |        | "**address**" field is a "*hidden*" address.                 |
+    |        | Hidden registers are used to store factory calibration       |
+    |        | and filter tuning coefficients that do not typically need    |
+    |        | to be viewed or modified by the user.                        |
+    +--------+--------------------------------------------------------------+
+    | 0      | Command Failed (CF):                                         |
+    |        | Used by the autopilot to report when a command has failed.   |
+    |        | Must be set to zero for all packets written to the UM7.      |
+    +--------+--------------------------------------------------------------+
+
+The address byte specifies which register will be involved in the operation:
+
+* During a read operation (Has Data = 0), the address specifies which register to read.
+
+* During a write operation (Has Data = 1), the address specifies where to place the data contained in the data section of the packet.
+
+* For a batch read/write operation, the address byte specifies the starting address of the operation.
+
+
+The "Data Bytes" section of the packet contains data to be written to one or more registers.
+No byte in the packet states explicitly how many bytes are in this section because
+it is possible to determine the number of data bytes that should be in the packet by evaluating
+the **PT** byte.
+
+If the "Has Data" bit in the **PT** byte is cleared (Has Data = 0),
+then there are no data bytes in the packet and the "Checksum" immediately follows the address.
+If, on the other hand, the "Has Data" bit is set (Has Data = 1) then the number
+of bytes in the data section depends on the value of
+the "Is Batch" and "Batch Length" portions of the **PT** byte.
+
+For a batch operation (Is Batch = 1), the length of the packet data section is equal to:
+
+.. math::
+
+    4 \times (\text{Batch Length}),
+
+Note that the batch length refers to the number of registers in the batch,
+**NOT** the number of bytes. Registers are :math:`4` bytes long.
+
+For a non-batch operation (Is Batch = 0),
+the length of the data section is equal to 4 bytes (one register).
+The data section lengths and total packet lengths for different
+**PT** configurations are shown below.
+
+.. table:: Packet Length Summary
+
+    +-----------+----------+----------------------------------------+--------------------------------------------+
+    | Has Data  | Is Batch | Data Section Length (bytes)            | Total Packet Length  (bytes)               |
+    +===========+==========+========================================+============================================+
+    | 0         | N/A      | 0                                      | 7                                          |
+    |           |          |                                        |                                            |
+    +-----------+----------+----------------------------------------+--------------------------------------------+
+    | 1         | 0        | 4                                      | 11                                         |
+    |           |          |                                        |                                            |
+    +-----------+----------+----------------------------------------+--------------------------------------------+
+    | 1         | 1        | :math:`4 \times (\text{Batch Length})` | :math:`7 + 4 \times (\text{Batch Length})` |
+    |           |          |                                        |                                            |
+    +-----------+----------+----------------------------------------+--------------------------------------------+
+
+
+Note that if a packet is a batch operation, the batch length must be greater than zero.
+
+The two checksum bytes consist of the unsigned
+16-bit sum of all preceding bytes in the packet, including the packet header.
+
+
+---------------------------
+Read Operations
+---------------------------
+
+To initiate a serial read of one or more registers aboard the sensor,
+a packet should be sent to the UM7 with the "Has Data" bit cleared.
+This tells the device that this will be a read operation
+from the address specified in the packet's "Address" byte.
+If the "Is Batch" bit is set, then the packet will trigger
+a batch read in which the "Address" byte specifies the address of the first
+register to be read.
+
+In response to a read packet, the UM7 will send a packet in which the "Has Data" bit is set,
+and the "Is Batch" and "Batch Length" bits are equivalent
+to those of the packet that triggered the read operation.
+The register data will be contained in the "Data Bytes" section of the packet.
+
+------------------------------
+Write Operations
+------------------------------
+
+To initiate a serial write into one or more registers aboard the sensor,
+a packet should be sent to the UM7 with the "Has Data" bit set.
+This tells the device that the incoming packet contains
+data that should be written to the register specified by the packet's "Address" byte.
+If a batch write operation is to be performed,
+the "Is Batch" bit should be set, and the "Batch Length" bits
+should indicate the number of registers that are to be written to.
+
+In response to a write packet,
+the UM7 will update the contents of the specified register(s) with
+the contents of the data section of the packet.
+It will then transmit a ``COMMAND_COMPLETE`` packet to indicate
+that the write operation succeeded.
+A ``COMMAND_COMPLETE`` packet is a packet with **PT** = 0 (no data, no batch)
+and with an address matching the address of the register
+to which the write operation was made,
+or the start address of the write operation if this was a batch write.
+
+Note that the ``COMMAND_COMPLETE`` packet is equivalent to a packet
+that would cause the autopilot to initiate a read operation on
+the address to which data was just written.
+Since the packet is going from the sensor to the host, however,
+its meaning is different (it would not make sense for the autopilot
+to request the contents of one of its registers from an external host).
+
+-----------------------------
+Command Operations
+-----------------------------
+
+
+There are a variety of register address that do not correspond with actual
+physical registers aboard the UM7.
+These "command" addresses are used to cause the sensor to execute specific commands
+(there are commands for executing calibration operations, resetting the onboard
+filters, etc. See the `Register Overview`_ in this document for more details).
+
+.. _Register Overview: register_map_current.html
+
+To initiate a command, simply send a packet to the autopilot with the command's address in
+the packet "Address" byte. The **PT** byte should be set to zero for a command operation.
+
+If the UM7 successfully completes the specified command,
+then a ``COMMAND_COMPLETE`` packet is returned with the command address
+in the "Address" byte of the response packet.
+If the command fails, the device responds by sending a ``COMMAND_FAILED`` packet.
+The ``COMMAND_FAILED`` packet is equivalent to the ``COMMAND_COMPLETE`` packet except that the
+"Command Failed" bit in the **PT** byte is set (**CF** = 1).
+
+In some cases, a command will cause specific packets to be sent other than the
+``COMMAND_COMPLETE`` packet.
+A ``GET_FW_VERSION`` command will, for example, return a packet containing the version
+of the firmware installed on the UM7.
+In this and similar cases, the ``COMMAND_COMPLETE`` packet is not sent.
+
+
+
+-----------------------------
+Broadcasted packets
+-----------------------------
+
+It is possible to configure the following packets to be sent periodically from the RSL board:
+
+
+.. _ALL_RAW_PACKET:
+
+`ALL_RAW_PACKET`
+########################################
+
+The ``ALL_RAW_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`11`, hence the packet total length:
+
+.. math::
+    \text{ALL_RAW_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 51 \; \text{bytes}
+
+.. table:: **ALL_RAW_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_GYRO_RAW_XY_ADDR``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``GYRO_RAW_X[15:8]``              |  :ref:`DREG_GYRO_RAW_XY`                       |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``GYRO_RAW_X[7:0]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``GYRO_RAW_Y[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``GYRO_RAW_Y[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``GYRO_RAW_Z[15:8]``              |  :ref:`DREG_GYRO_RAW_Z`                        |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``GYRO_RAW_Z[7:0]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``GYRO_RAW_TIME[31:24]``          |  :ref:`DREG_GYRO_RAW_TIME`                     |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``GYRO_RAW_TIME[23:16]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``GYRO_RAW_TIME[15:8]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``GYRO_RAW_TIME[7:0]``            |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``ACCEL_RAW_X[15:8]``             |  :ref:`DREG_ACCEL_RAW_XY`                      |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``ACCEL_RAW_X[7:0]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | ``ACCEL_RAW_Y[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | ``ACCEL_RAW_Y[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | ``ACCEL_RAW_Z[15:8]``             |  :ref:`DREG_ACCEL_RAW_Z`                       |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | ``ACCEL_RAW_Z[7:0]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **24**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **25**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **26**        | ``ACCEL_RAW_TIME[31:24]``         |  :ref:`DREG_ACCEL_RAW_TIME`                    |
+    +---------------+-----------------------------------+                                                |
+    | **27**        | ``ACCEL_RAW_TIME[23:16]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **28**        | ``ACCEL_RAW_TIME[15:8]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **29**        | ``ACCEL_RAW_TIME[7:0]``           |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **30**        | ``MAG_RAW_X[15:8]``               |  :ref:`DREG_MAG_RAW_XY`                        |
+    +---------------+-----------------------------------+                                                |
+    | **31**        | ``MAG_RAW_X[7:0]``                |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **32**        | ``MAG_RAW_Y[15:8]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **33**        | ``MAG_RAW_Y[7:0]``                |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **34**        | ``MAG_RAW_Z[15:8]``               |  :ref:`DREG_MAG_RAW_Z`                         |
+    +---------------+-----------------------------------+                                                |
+    | **35**        | ``MAG_RAW_Z[7:0]``                |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **36**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **37**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **38**        | ``MAG_RAW_TIME[31:24]``           |  :ref:`DREG_MAG_RAW_TIME`                      |
+    +---------------+-----------------------------------+                                                |
+    | **39**        | ``MAG_RAW_TIME[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **40**        | ``MAG_RAW_TIME[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **41**        | ``MAG_RAW_TIME[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **42**        | ``DREG_TEMPERATURE[31:24]``       |  :ref:`DREG_TEMPERATURE`                       |
+    +---------------+-----------------------------------+                                                |
+    | **43**        | ``DREG_TEMPERATURE[23:16]``       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **44**        | ``DREG_TEMPERATURE[15:8]``        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **45**        | ``DREG_TEMPERATURE[7:0]``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **46**        | ``DREG_TEMPERATURE_TIME[31:24]``  |  :ref:`DREG_TEMPERATURE_TIME`                  |
+    +---------------+-----------------------------------+                                                |
+    | **47**        | ``DREG_TEMPERATURE_TIME[23:16]``  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **48**        | ``DREG_TEMPERATURE_TIME[15:8]``   |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **49**        | ``DREG_TEMPERATURE_TIME[7:0]``    |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **50**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **51**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+
+.. _RAW_GYRO_PACKET:
+
+`RAW_GYRO_PACKET`
+########################################
+
+The ``RAW_GYRO_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`3`, hence the packet total length:
+
+.. math::
+    \text{RAW_GYRO_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}
+
+.. table:: **RAW_GYRO_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_GYRO_RAW_XY_ADDR``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``GYRO_RAW_X[15:8]``              |  :ref:`DREG_GYRO_RAW_XY`                       |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``GYRO_RAW_X[7:0]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``GYRO_RAW_Y[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``GYRO_RAW_Y[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``GYRO_RAW_Z[15:8]``              |  :ref:`DREG_GYRO_RAW_Z`                        |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``GYRO_RAW_Z[7:0]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``GYRO_RAW_TIME[31:24]``          |  :ref:`DREG_GYRO_RAW_TIME`                     |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``GYRO_RAW_TIME[23:16]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``GYRO_RAW_TIME[15:8]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``GYRO_RAW_TIME[7:0]``            |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+.. _RAW_ACCEL_PACKET:
+
+`RAW_ACCEL_PACKET`
+########################################
+
+The frequency of sending the ``RAW_ACCEL_PACKET`` broadcast messages
+is defined by the field ``RAW_ACCEL_RATE`` in the :ref:`CREG_COM_RATES1` register.
+
+**Note**: if ``ALL_RAW_RATE`` field of the register :ref:`CREG_COM_RATES2` is not 0, then
+packet with all raw sensor data (:ref:`ALL_RAW_PACKET`) will be sent instead,
+since :ref:`ALL_RAW_PACKET` has higher priority.
+
+The ``RAW_ACCEL_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`3`, hence the packet total length:
+
+.. math::
+    \text{RAW_ACCEL_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}
+
+.. table:: **RAW_ACCEL_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_ACCEL_RAW_XY_ADDR``        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``ACCEL_RAW_X[15:8]``             |  :ref:`DREG_ACCEL_RAW_XY`                      |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``ACCEL_RAW_X[7:0]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``ACCEL_RAW_Y[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``ACCEL_RAW_Y[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``ACCEL_RAW_Z[15:8]``             |  :ref:`DREG_ACCEL_RAW_Z`                       |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``ACCEL_RAW_Z[7:0]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``ACCEL_RAW_TIME[31:24]``         |  :ref:`DREG_ACCEL_RAW_TIME`                    |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``ACCEL_RAW_TIME[23:16]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``ACCEL_RAW_TIME[15:8]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``ACCEL_RAW_TIME[7:0]``           |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+.. _RAW_MAG_PACKET:
+
+`RAW_MAG_PACKET`
+########################################
+
+The ``RAW_MAG_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`3`, hence the packet total length:
+
+.. math::
+    \text{RAW_MAG_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}
+
+.. table:: **RAW_MAG_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_MAG_RAW_XY_ADDR``          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``MAG_RAW_X[15:8]``               |  :ref:`DREG_MAG_RAW_XY`                        |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``MAG_RAW_X[7:0]``                |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``MAG_RAW_Y[15:8]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``MAG_RAW_Y[7:0]``                |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``MAG_RAW_Z[15:8]``               |  :ref:`DREG_MAG_RAW_Z`                         |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``MAG_RAW_Z[7:0]``                |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``MAG_RAW_TIME[31:24]``           |  :ref:`DREG_MAG_RAW_TIME`                      |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``MAG_RAW_TIME[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``MAG_RAW_TIME[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``MAG_RAW_TIME[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+.. _RAW_TEMPERATURE_PACKET:
+
+`RAW_TEMPERATURE_PACKET`
+########################################
+
+The ``RAW_TEMPERATURE_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`2`, hence the packet total length:
+
+.. math::
+    \text{RAW_MAG_2_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 15 \; \text{bytes}
+
+.. table:: **RAW_TEMPERATURE_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_TEMPERATURE_ADDR``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``TEMPERATURE[31:24]``            |  :ref:`DREG_TEMPERATURE`                       |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``TEMPERATURE[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``TEMPERATURE[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``TEMPERATURE[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``TEMPERATURE_TIME[31:24]``       |  :ref:`DREG_TEMPERATURE_TIME`                  |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``TEMPERATURE_TIME[23:16]``       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``TEMPERATURE_TIME[15:8]``        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``TEMPERATURE_TIME[7:0]``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+.. _ALL_PROC_PACKET:
+
+`ALL_PROC_PACKET`
+########################################
+
+The ``ALL_PROC_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`12`, hence the packet total length:
+
+.. math::
+    \text{ALL_PROC_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 55 \; \text{bytes}
+
+.. table:: **ALL_PROC_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_GYRO_PROC_X_ADDR``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``GYRO_PROC_X[31:24]``            |  :ref:`DREG_GYRO_PROC_X`                       |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``GYRO_PROC_X[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``GYRO_PROC_X[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``GYRO_PROC_X[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``GYRO_PROC_Y[31:24]``            |  :ref:`DREG_GYRO_PROC_Y`                       |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``GYRO_PROC_Y[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``GYRO_PROC_Y[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``GYRO_PROC_Y[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``GYRO_PROC_Z[31:24]``            |  :ref:`DREG_GYRO_PROC_Z`                       |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``GYRO_PROC_Z[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``GYRO_PROC_Z[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``GYRO_PROC_Z[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``GYRO_PROC_TIME[31:24]``         |  :ref:`DREG_GYRO_PROC_TIME`                    |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``GYRO_PROC_TIME[23:16]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | ``GYRO_PROC_TIME[15:8]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | ``GYRO_PROC_TIME[7:0]``           |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | ``ACCEL_PROC_X[31:24]``           |  :ref:`DREG_ACCEL_PROC_X`                      |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | ``ACCEL_PROC_X[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **24**        | ``ACCEL_PROC_X[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **25**        | ``ACCEL_PROC_X[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **26**        | ``ACCEL_PROC_Y[31:24]``           |  :ref:`DREG_ACCEL_PROC_Y`                      |
+    +---------------+-----------------------------------+                                                |
+    | **27**        | ``ACCEL_PROC_Y[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **28**        | ``ACCEL_PROC_Y[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **29**        | ``ACCEL_PROC_Y[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **30**        | ``ACCEL_PROC_Z[31:24]``           |  :ref:`DREG_ACCEL_PROC_Z`                      |
+    +---------------+-----------------------------------+                                                |
+    | **31**        | ``ACCEL_PROC_Z[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **32**        | ``ACCEL_PROC_Z[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **33**        | ``ACCEL_PROC_Z[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **34**        | ``ACCEL_PROC_TIME[31:24]``        |  :ref:`DREG_ACCEL_PROC_TIME`                   |
+    +---------------+-----------------------------------+                                                |
+    | **35**        | ``ACCEL_PROC_TIME[23:16]``        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **36**        | ``ACCEL_PROC_TIME[15:8]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **37**        | ``ACCEL_PROC_TIME[7:0]``          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **38**        | ``MAG_PROC_X[31:24]``             |  :ref:`DREG_MAG_PROC_X`                        |
+    +---------------+-----------------------------------+                                                |
+    | **39**        | ``MAG_PROC_X[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **40**        | ``MAG_PROC_X[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **41**        | ``MAG_PROC_X[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **42**        | ``MAG_PROC_Y[31:24]``             |  :ref:`DREG_MAG_PROC_Y`                        |
+    +---------------+-----------------------------------+                                                |
+    | **43**        | ``MAG_PROC_Y[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **44**        | ``MAG_PROC_Y[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **45**        | ``MAG_PROC_Y[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **46**        | ``MAG_PROC_Z[31:24]``             |  :ref:`DREG_MAG_PROC_Z`                        |
+    +---------------+-----------------------------------+                                                |
+    | **47**        | ``MAG_PROC_Z[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **48**        | ``MAG_PROC_Z[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **49**        | ``MAG_PROC_Z[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **50**        | ``MAG_PROC_TIME[31:24]``          |  :ref:`DREG_MAG_PROC_TIME`                     |
+    +---------------+-----------------------------------+                                                |
+    | **51**        | ``MAG_PROC_TIME[23:16]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **52**        | ``MAG_PROC_TIME[15:8]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **53**        | ``MAG_PROC_TIME[7:0]``            |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **54**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **55**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+
+
+.. _PROC_GYRO_PACKET:
+
+`PROC_GYRO_PACKET`
+########################################
+
+The ``PROC_GYRO_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`4`, hence the packet total length:
+
+.. math::
+    \text{PROC_GYRO_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}
+
+.. table:: **PROC_GYRO_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_GYRO_PROC_X_ADDR``         |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``GYRO_PROC_X[31:24]``            |  :ref:`DREG_GYRO_PROC_X`                       |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``GYRO_PROC_X[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``GYRO_PROC_X[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``GYRO_PROC_X[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``GYRO_PROC_Y[31:24]``            |  :ref:`DREG_GYRO_PROC_Y`                       |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``GYRO_PROC_Y[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``GYRO_PROC_Y[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``GYRO_PROC_Y[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``GYRO_PROC_Z[31:24]``            |  :ref:`DREG_GYRO_PROC_Z`                       |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``GYRO_PROC_Z[23:16]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``GYRO_PROC_Z[15:8]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``GYRO_PROC_Z[7:0]``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``GYRO_PROC_TIME[31:24]``         |  :ref:`DREG_GYRO_PROC_TIME`                    |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``GYRO_PROC_TIME[23:16]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | ``GYRO_PROC_TIME[15:8]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | ``GYRO_PROC_TIME[7:0]``           |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+
+.. _PROC_ACCEL_PACKET:
+
+`PROC_ACCEL_PACKET`
+########################################
+
+The ``PROC_ACCEL_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`4`, hence the packet total length:
+
+.. math::
+    \text{PROC_ACCEL_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}
+
+.. table:: **PROC_ACCEL_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_ACCEL_PROC_X_ADDR``        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``ACCEL_PROC_X[31:24]``           |  :ref:`DREG_ACCEL_PROC_X`                      |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``ACCEL_PROC_X[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``ACCEL_PROC_X[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``ACCEL_PROC_X[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``ACCEL_PROC_Y[31:24]``           |  :ref:`DREG_ACCEL_PROC_Y`                      |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``ACCEL_PROC_Y[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``ACCEL_PROC_Y[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``ACCEL_PROC_Y[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``ACCEL_PROC_Z[31:24]``           |  :ref:`DREG_ACCEL_PROC_Z`                      |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``ACCEL_PROC_Z[23:16]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``ACCEL_PROC_Z[15:8]``            |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``ACCEL_PROC_Z[7:0]``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``ACCEL_PROC_TIME[31:24]``        |  :ref:`DREG_ACCEL_PROC_TIME`                   |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``ACCEL_PROC_TIME[23:16]``        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | ``ACCEL_PROC_TIME[15:8]``         |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | ``ACCEL_PROC_TIME[7:0]``          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+.. _PROC_MAG_PACKET:
+
+`PROC_MAG_PACKET`
+########################################
+
+The ``PROC_MAG_PACKET`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`4`, hence the packet total length:
+
+.. math::
+    \text{PROC_MAG_PACKET}_{\text{length}} = 4 \times \text{Data Length} + 7 = 23 \; \text{bytes}
+
+.. table:: **PROC_MAG_PACKET**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_MAG_PROC_X_ADDR``          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``MAG_PROC_X[31:24]``             |  :ref:`DREG_MAG_PROC_X`                        |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``MAG_PROC_X[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``MAG_PROC_X[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``MAG_PROC_X[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``MAG_PROC_Y[31:24]``             |  :ref:`DREG_MAG_PROC_Y`                        |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``MAG_PROC_Y[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``MAG_PROC_Y[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``MAG_PROC_Y[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``MAG_PROC_Z[31:24]``             |  :ref:`DREG_MAG_PROC_Z`                        |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``MAG_PROC_Z[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``MAG_PROC_Z[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``MAG_PROC_Z[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``MAG_PROC_TIME[31:24]``          |  :ref:`DREG_MAG_PROC_TIME`                     |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``MAG_PROC_TIME[23:16]``          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | ``MAG_PROC_TIME[15:8]``           |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | ``MAG_PROC_TIME[7:0]``            |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+.. _EULER_PHI_THETA:
+
+`EULER_PHI_THETA`
+########################################
+
+The ``EULER_PHI_THETA`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`5`, hence the packet total length:
+
+.. math::
+    \text{EULER_PHI_THETA}_{\text{length}} = 4 \times \text{Data Length} + 7 = 27 \; \text{bytes}
+
+.. table:: **EULER_PHI_THETA**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_EULER_PHI_THETA_ADDR``     |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``PHI[15:8]``                     |  :ref:`DREG_EULER_PHI_THETA`                   |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``PHI[7:0]``                      |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``THETA[15:8]``                   |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``THETA[7:0]``                    |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``PSI[15:8]``                     |  :ref:`DREG_EULER_PSI`                         |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``PSI[7:0]``                      |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``PHI_DOT[15:8]``                 |  :ref:`DREG_EULER_PHI_THETA_DOT`               |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``PHI_DOT[7:0]``                  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``THETA_DOT[15:8]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``THETA_DOT[7:0]``                |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | ``PSI_DOT[15:8]``                 |  :ref:`DREG_EULER_PSI_DOT`                     |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | ``PSI_DOT[7:0]``                  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **20**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **21**        | Reserved                          |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **22**        | ``EULER_TIME[31:24]``             |  :ref:`DREG_EULER_TIME`                        |
+    +---------------+-----------------------------------+                                                |
+    | **23**        | ``EULER_TIME[23:16]``             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **24**        | ``EULER_TIME[15:8]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **25**        | ``EULER_TIME[7:0]``               |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **26**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **27**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+
+.. _HEALTH:
+
+`HEALTH`
+########################################
+
+The ``HEALTH`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`1`, hence the packet total length:
+
+.. math::
+    \text{HEALTH}_{\text{length}} = 4 \times \text{Data Length} + 7 = 11 \; \text{bytes}
+
+.. table:: **HEALTH**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_HEALTH_ADDR``              |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``HEALTH[31:24]``                 |  :ref:`DREG_HEALTH`                            |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``HEALTH[23:16]``                 |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``HEALTH[15:8]``                  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``HEALTH[7:0]``                   |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
+
+
+.. _QUATERNION:
+
+`QUATERNION`
+########################################
+
+The ``QUATERNION`` has the structure defined in the table below.
+The **Data Length** of the packet is :math:`3`, hence the packet total length:
+
+.. math::
+    \text{QUATERNION}_{\text{length}} = 4 \times \text{Data Length} + 7 = 19 \; \text{bytes}
+
+.. table:: **QUATERNION**
+
+    +---------------+-----------------------------------+------------------------------------------------+
+    | Byte          | Content                           | Register Payload                               |
+    +===============+===================================+================================================+
+    | **1**         | ``s``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **2**         | ``n``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **3**         | ``p``                             |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **4**         | Packet type                       |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **5**         | ``DREG_QUAT_AB_ADDR``             |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **6**         | ``QUAT_A[15:8]``                  |  :ref:`DREG_QUAT_AB`                           |
+    +---------------+-----------------------------------+                                                |
+    | **7**         | ``QUAT_A[7:0]``                   |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **8**         | ``QUAT_B[15:8]``                  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **9**         | ``QUAT_B[7:0]``                   |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **10**        | ``QUAT_C[15:8]``                  |  :ref:`DREG_QUAT_CD`                           |
+    +---------------+-----------------------------------+                                                |
+    | **11**        | ``QUAT_C[7:0]``                   |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **12**        | ``QUAT_D[15:8]``                  |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **13**        | ``QUAT_D[7:0]``                   |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **14**        | ``QUAT_TIME[31:24]``              |  :ref:`DREG_QUAT_TIME`                         |
+    +---------------+-----------------------------------+                                                |
+    | **15**        | ``QUAT_TIME[23:16]``              |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **16**        | ``QUAT_TIME[15:8]``               |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **17**        | ``QUAT_TIME[7:0]``                |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+    | **18**        | Checksum 1                        |                                                |
+    +---------------+-----------------------------------+                                                |
+    | **19**        | Checksum 2                        |                                                |
+    +---------------+-----------------------------------+------------------------------------------------+
+
