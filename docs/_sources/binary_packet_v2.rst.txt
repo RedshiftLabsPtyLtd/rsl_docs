@@ -8,7 +8,7 @@ Binary packet structure V2
 
 For the `shearwater` board, we modified the packet structure (in particularly the packet type (PT) byte content).
 The main reason for altering packet type is adding additional sensors.
-For shearwater, we have batch size of more then 16 registers for processed registers.
+For `shearwater`, we have batch size of more then 16 registers for processed registers.
 
 
 .. table:: UART new packet structure
